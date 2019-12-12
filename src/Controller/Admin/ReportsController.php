@@ -56,7 +56,8 @@ final class ReportsController extends AbstractController
         $data = $form->getData();
         return $this->templatingEngine->renderResponse('@MonsieurBizSyliusSalesReportsPlugin/Admin/view.html.twig', [
             'form' => $form->createView(),
-            'date' => $data['date']
+            'date' => $data['date'],
+            'channel' => $data['channel']
         ]);
     }
 }

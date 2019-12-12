@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin\Form\Type;
 
+use Sylius\Bundle\ChannelBundle\Form\Type\ChannelChoiceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType as SymfonyDateType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,6 +23,7 @@ class DateType extends AbstractType
                     new Assert\Date([])
                 ],
             ])
+            ->add('channel', ChannelChoiceType::class)
         ;
     }
 }

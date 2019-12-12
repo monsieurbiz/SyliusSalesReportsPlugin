@@ -36,8 +36,8 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "MonsieurBiz\\Sylius__YourName__Plugin\\": "src/",
-            "Tests\\MonsieurBiz\\Sylius__YourName__Plugin\\": "tests/"
+            "MonsieurBiz\\SyliusSalesReportsPlugin\\": "src/",
+            "Tests\\MonsieurBiz\\SyliusSalesReportsPlugin\\": "tests/"
         }
     },
     "autoload-dev": {

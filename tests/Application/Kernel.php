@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Monsieurbiz\Sylius__YourName__Plugin\Application;
+namespace Tests\Monsieurbiz\SyliusSalesReportsPlugin\Application;
 
 use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;

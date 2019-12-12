@@ -1,4 +1,4 @@
 suites:
     main:
-        namespace: Monsieurbiz\Sylius__YourName__Plugin
-        psr4_prefix: Monsieurbiz\Sylius__YourName__Plugin
+        namespace: Monsieurbiz\SyliusSalesReportsPlugin
+        psr4_prefix: Monsieurbiz\SyliusSalesReportsPlugin

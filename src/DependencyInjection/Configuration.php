@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MonsieurBiz\Sylius__YourName__Plugin\DependencyInjection;
+namespace MonsieurBiz\SyliusSalesReportsPlugin\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

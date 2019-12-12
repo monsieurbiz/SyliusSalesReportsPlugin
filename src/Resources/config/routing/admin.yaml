@@ -1,0 +1,5 @@
+monsieur_biz_sylius_sales_reports_admin_index:
+  path: /monsieur_biz/sales_reports/
+  methods: [GET]
+  defaults:
+    _controller: MonsieurBiz\SyliusSalesReportsPlugin\Controller\Admin\ReportsController:formAction

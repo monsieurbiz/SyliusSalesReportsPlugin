@@ -1,0 +1,3 @@
+monsieur_biz_sylius_sales_reports_admin:
+  resource: "routing/admin.yaml"
+  prefix: /admin

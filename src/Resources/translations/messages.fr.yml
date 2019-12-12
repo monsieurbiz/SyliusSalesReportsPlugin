@@ -1,0 +1,15 @@
+monsieur_biz_sales_reports:
+  ui:
+    title: 'Rapport des ventes'
+    subtitle: 'Visualisez les rapports de vos ventes'
+    day_report: 'Rapport journalier'
+    day_report_for: 'Rapport journalier le %date% pour %channel%'
+  form:
+    date:
+      label: 'Journée spécifique'
+  view:
+    amount_without_tax: 'Montant HT'
+    promo_amount_without_tax: 'Montant Promo HT'
+    shipping_amount_without_tax: 'Montant Livraison HT'
+    tax_amount: 'Montant TVA'
+    total_amount: 'Montant TTC'

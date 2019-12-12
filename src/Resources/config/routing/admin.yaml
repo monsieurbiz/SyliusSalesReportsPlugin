@@ -5,8 +5,8 @@ monsieur_biz_sylius_sales_reports_admin_index:
     _controller: MonsieurBiz\SyliusSalesReportsPlugin\Controller\Admin\ReportsController:indexAction
 
 monsieur_biz_sylius_sales_reports_admin_view:
-  path: /monsieur_biz/sales_reports/view/
+  path: /monsieur_biz/sales_reports/
   methods: [POST]
   defaults:
-    _controller: MonsieurBiz\SyliusSalesReportsPlugin\Controller\Admin\ReportsController:viewAction
+    _controller: MonsieurBiz\SyliusSalesReportsPlugin\Controller\Admin\ReportsController:indexAction
 

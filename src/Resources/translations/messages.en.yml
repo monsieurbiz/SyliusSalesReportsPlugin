@@ -1,0 +1,4 @@
+monsieur_biz_sales_reports:
+  form:
+    date:
+      label: 'Specific day'

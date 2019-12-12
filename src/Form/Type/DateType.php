@@ -20,10 +20,16 @@ class DateType extends AbstractType
                 'label' => 'monsieur_biz_sales_reports.form.date.label',
                 'required' => true,
                 'constraints' => [
-                    new Assert\Date([])
+                    new Assert\Date([]),
+                    new Assert\NotBlank([]),
                 ],
             ])
-            ->add('channel', ChannelChoiceType::class)
+            ->add('channel', ChannelChoiceType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank([]),
+                ],
+            ])
         ;
     }
 }

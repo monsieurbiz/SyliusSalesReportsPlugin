@@ -20,10 +20,17 @@ Edit your `config/bundles.php` to add this line :
     MonsieurBiz\SyliusSalesReportsPlugin\MonsieurBizSyliusSalesReportsPlugin::class => ['all' => true],
 ``` 
 
-And import plugin config in `config/packages/monsieur_biz_sales_report_plugin.yaml` :
+Import plugin config in `config/packages/monsieur_biz_sales_reports_plugin.yaml` :
 
 ```yaml
 imports:
   - { resource: "@MonsieurBizSyliusSalesReportsPlugin/Resources/config/config.yaml" }
 ``` 
 
+
+Import plugin routing in `config/routes.yaml` : 
+
+```yaml
+monsieur_biz_sales_reports_plugin:
+    resource: "@MonsieurBizSyliusSalesReportsPlugin/Resources/config/routing.yaml"
+```

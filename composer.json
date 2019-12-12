@@ -1,12 +1,12 @@
 {
-    "name": "monsieurbiz/sylius-__your-name__-plugin",
+    "name": "monsieurbiz/sylius-sales-reports-plugin",
     "type": "sylius-plugin",
     "keywords": ["sylius", "sylius-plugin"],
     "description": "__Your description__",
     "license": "MIT",
     "require": {
         "php": "^7.2",
-        "sylius/sylius": "^1.6"
+        "sylius/sylius": "^1.4.0"
     },
     "require-dev": {
         "behat/behat": "^3.4",

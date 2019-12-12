@@ -30,12 +30,27 @@ final class ReportsController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function formAction(Request $request): Response
+    public function indexAction(Request $request): Response
     {
         $form = $this->createForm(DateType::class);
 
-        return $this->templatingEngine->renderResponse('@MonsieurBizSyliusSalesReportsPlugin/Admin/form.html.twig', [
+        return $this->templatingEngine->renderResponse('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    public function viewAction(Request $request): Response
+    {
+        $form = $this->createForm(DateType::class);
+        $form->submit($request->request->get($form->getName()));
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            throw $this->createNotFoundException('Form is not submitted');
+        }
+
+        $data = $form->getData();
+        return $this->templatingEngine->renderResponse('@MonsieurBizSyliusSalesReportsPlugin/Admin/view.html.twig', [
+            'form' => $form->createView(),
+            'date' => $data['date']
         ]);
     }
 }

@@ -1,0 +1,14 @@
+<div class="ui hidden divider"></div>
+
+{{ form_start(form, {'action': path('monsieur_biz_sylius_sales_reports_admin_view'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
+<div class="ui segment">
+    <h2>{{ 'monsieur_biz_sales_reports.ui.day_report'|trans }}</h2>
+    {{ form_row(form.date) }}
+    <div class="ui basic segment">
+        <div class="ui buttons">
+            <button class="ui labeled icon primary button" type="submit"><i class="search icon"></i>{{ 'sylius.ui.generate'|trans }}</button>
+        </div>
+    </div>
+</div>
+{{ form_row(form._token) }}
+{{ form_end(form, {'render_rest': false}) }}

@@ -1,0 +1,14 @@
+{% extends '@SyliusAdmin/layout.html.twig' %}
+
+{% import '@SyliusUi/Macro/headers.html.twig' as headers %}
+
+{% set header = 'monsieur_biz_sales_reports.ui.title' %}
+
+{% block title %}{{ header|trans }} {{ parent() }}{% endblock %}
+
+{% form_theme form '@SyliusAdmin/Form/theme.html.twig' %}
+
+{% block content %}
+    {% include('@MonsieurBizSyliusSalesReportsPlugin/Admin/_header.html.twig') %}
+    {% include('@MonsieurBizSyliusSalesReportsPlugin/Admin/_form.html.twig') %}
+{% endblock %}

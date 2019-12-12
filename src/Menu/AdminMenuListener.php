@@ -7,6 +7,8 @@ use Sylius\Bundle\UiBundle\Menu\Event\MenuBuilderEvent;
 class AdminMenuListener
 {
     /**
+     * Add reports link in sales menu
+     *
      * @param MenuBuilderEvent $event
      */
     public function addAdminMenuItem(MenuBuilderEvent $event): void

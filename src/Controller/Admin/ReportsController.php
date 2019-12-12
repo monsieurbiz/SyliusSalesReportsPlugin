@@ -39,12 +39,18 @@ final class ReportsController extends AbstractController
         ]);
     }
 
+    /**
+     * View the report for a single date
+     *
+     * @param Request $request
+     * @return Response
+     */
     public function viewAction(Request $request): Response
     {
         $form = $this->createForm(DateType::class);
         $form->submit($request->request->get($form->getName()));
         if (!$form->isSubmitted() || !$form->isValid()) {
-            throw $this->createNotFoundException('Form is not submitted');
+            throw $this->createNotFoundException('Form is not valid');
         }
 
         $data = $form->getData();

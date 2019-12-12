@@ -1,1 +1,2 @@
-## The plugin config and imports
+imports:
+  - { resource: "services.yaml" }

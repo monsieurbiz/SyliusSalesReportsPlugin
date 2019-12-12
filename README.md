@@ -1,9 +1,29 @@
-# Monsieur Biz Sylius __YourName__ Plugin
+# Monsieur Biz Sylius sales report plugin
 
-## How to use
+## Install
 
-Search and replace `__YourName__` with your plugin name like `Cms` or `SalesReports`.
+ Without symfony binary : 
+ 
+`composer require monsieurbiz/sylius-sales-reports-plugin=dev-master`
+ 
+ With symfony binary : 
+ 
+`symfony composer require monsieurbiz/sylius-sales-reports-plugin=dev-master`
 
-Search and replace `__your_name__` with your plugin name like `cms` or `sales_reports`.
+> We will make tagged release when the plugin development will be ended. Use it carefully until this moment
 
-Search and replace `__your-name__` with your plugin name like `cms` or `sales-reports`.
+## Configure
+
+Edit your `config/bundles.php` to add this line :
+
+```
+    MonsieurBiz\SyliusSalesReportsPlugin\MonsieurBizSyliusSalesReportsPlugin::class => ['all' => true],
+``` 
+
+And import plugin config in `config/packages/monsieur_biz_sales_report_plugin.yaml` :
+
+```yaml
+imports:
+  - { resource: "@MonsieurBizSyliusSalesReportsPlugin/Resources/config/config.yaml" }
+``` 
+

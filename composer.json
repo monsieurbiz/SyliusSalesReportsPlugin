@@ -1,12 +1,11 @@
 {
-    "name": "sylius/plugin-skeleton",
+    "name": "monsieurbiz/sylius-__your-name__-plugin",
     "type": "sylius-plugin",
     "keywords": ["sylius", "sylius-plugin"],
-    "description": "Acme example plugin for Sylius.",
+    "description": "__Your description__",
     "license": "MIT",
     "require": {
         "php": "^7.2",
-
         "sylius/sylius": "^1.6"
     },
     "require-dev": {
@@ -37,8 +36,8 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Acme\\SyliusExamplePlugin\\": "src/",
-            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+            "MonsieurBiz\\Sylius__YourName__Plugin\\": "src/",
+            "Tests\\MonsieurBiz\\Sylius__YourName__Plugin\\": "tests/"
         }
     },
     "autoload-dev": {

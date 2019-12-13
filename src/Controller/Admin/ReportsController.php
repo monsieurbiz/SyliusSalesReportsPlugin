@@ -92,6 +92,12 @@ final class ReportsController extends AbstractController
         $channel = $data['channel'];
         $from = $data['date'] ?? $data['from'];
         $to = $data['date'] ?? $data['to'];
+
+        // Reverse date if from date greater than end date
+        if ($from > $to) {
+            $tmp = $to; $to = $from; $from = $tmp; $data['from'] = $from; $data['to'] = $to;
+        }
+
         Assert::isInstanceOf($channel, ChannelInterface::class);
         Assert::isInstanceOf($from, \DateTimeInterface::class);
         Assert::isInstanceOf($to, \DateTimeInterface::class);
@@ -100,6 +106,7 @@ final class ReportsController extends AbstractController
         try {
             $totalSalesResult = $this->reportRepository->getSalesForChannelForDates($channel, $from, $to);
             $averageSalesResult = $this->reportRepository->getAverageSalesForChannelForDates($channel, $from, $to);
+            $productSalesResult = $this->reportRepository->getProductSalesForChannelForDates($channel, $from, $to);
             $productVariantSalesResult = $this->reportRepository->getProductVariantSalesForChannelForDates($channel, $from, $to);
         } catch (InvalidDateException $e) {
             $form->addError(new FormError($e->getMessage()));
@@ -116,6 +123,7 @@ final class ReportsController extends AbstractController
             'channel' => $data['channel'],
             'total_sales_result' => $totalSalesResult,
             'average_sales_result' => $averageSalesResult,
+            'product_sales_result' => $productSalesResult,
             'product_variant_sales_result' => $productVariantSalesResult,
             'is_period' => $isPeriod
         ]);

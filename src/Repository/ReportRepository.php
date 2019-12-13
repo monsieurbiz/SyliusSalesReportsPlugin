@@ -113,7 +113,6 @@ final class ReportRepository
         return $this->getSalesForChannelForDates($channel, $from, $to, 'order_id');
     }
 
-
     /**
      * Get sales per product variant for channel between 2 date times
      *
@@ -151,6 +150,42 @@ final class ReportRepository
     }
 
     /**
+     * Get sales per product for channel between 2 date times
+     *
+     * @param ChannelInterface $channel
+     * @param \DateTimeInterface $from
+     * @param \DateTimeInterface|null $to
+     * @return array
+     * @throws InvalidDateException
+     */
+    public function getProductSalesForChannelForDates(
+        ChannelInterface $channel,
+        \DateTimeInterface $from,
+        ?\DateTimeInterface $to = null
+    ): array {
+        $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
+        try {
+            $from = new \DateTime($from->format("Y-m-d")." 00:00:00");
+            $to   = new \DateTime($to->format("Y-m-d")." 23:59:59");
+        } catch (\Exception $e) {
+            throw new InvalidDateException('Invalid date given to report.');
+        }
+
+        $this->results = [];
+
+        // Order Item Units values
+        $this->addResultsByElement(
+            $this->getOrderItemUnitValues($channel, $from, $to), 'product_id', 'product_name'
+        );
+        // Order Items values
+        $this->addResultsByElement(
+            $this->getOrderItemValues($channel, $from, $to), 'product_id', 'product_name'
+        );
+
+        return $this->results;
+    }
+
+    /**
      * Generate results for order item units
      *
      * @param ChannelInterface $channel
@@ -166,6 +201,7 @@ final class ReportRepository
         $queryBuilder = $this->orderRepository->createQueryBuilder('o')
             ->select($this->getSelectColumns(true, false, false))
             ->leftJoin('o.items', 'item')
+            ->leftJoin('item.variant', 'variant')
             ->leftJoin('item.units', 'element')
         ;
         $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $from, $to);
@@ -188,6 +224,7 @@ final class ReportRepository
         $queryBuilder = $this->orderRepository->createQueryBuilder('o')
             ->select($this->getSelectColumns(false, true, false))
             ->leftJoin('o.items', 'element')
+            ->leftJoin('element.variant', 'variant')
         ;
         $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $from, $to);
         return $queryBuilder->getQuery()->getArrayResult();
@@ -228,6 +265,10 @@ final class ReportRepository
         return implode(',',[
             // Order ID
             'o.id as order_id',
+
+            // Product infos
+            ($isItemUnit ? 'IDENTITY(variant.product) as product_id' : ($isItem ? 'IDENTITY(variant.product) as product_id' : '\'\' as product_id')),
+            ($isItemUnit ? 'item.productName as product_name' : ($isItem ? 'element.productName as product_name' : '\'\' as product_name')),
 
             // Variant infos
             ($isItemUnit ? 'IDENTITY(item.variant) as variant_id' : ($isItem ? 'IDENTITY(element.variant) as variant_id' : '\'\' as variant_id')),

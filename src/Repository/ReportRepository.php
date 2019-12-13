@@ -20,6 +20,11 @@ final class ReportRepository
     protected $orderRepository;
 
     /**
+     * @var RepositoryInterface
+     */
+    protected $productVariantRepository;
+
+    /**
      * Result with totals, one dimensional array
      *
      * @var array
@@ -51,9 +56,10 @@ final class ReportRepository
      * ReportRepository constructor.
      * @param RepositoryInterface $orderRepository
      */
-    public function __construct(RepositoryInterface $orderRepository)
+    public function __construct(RepositoryInterface $orderRepository, RepositoryInterface $productVariantRepository)
     {
         $this->orderRepository = $orderRepository;
+        $this->productVariantRepository = $productVariantRepository;
     }
 
     /**
@@ -145,6 +151,94 @@ final class ReportRepository
         $this->addResultsByElement(
             $this->getOrderItemValues($channel, $from, $to), 'variant_id', 'variant_name'
         );
+
+        return $this->results;
+    }
+
+    /**
+     * Get sales per product option for channel between 2 date times
+     *
+     * @param ChannelInterface $channel
+     * @param \DateTimeInterface $from
+     * @param \DateTimeInterface|null $to
+     * @return array
+     * @throws InvalidDateException
+     */
+    public function getProductOptionSalesForChannelForDates(
+        ChannelInterface $channel,
+        \DateTimeInterface $from,
+        ?\DateTimeInterface $to = null
+    ): array {
+        $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
+        try {
+            $from = new \DateTime($from->format("Y-m-d")." 00:00:00");
+            $to   = new \DateTime($to->format("Y-m-d")." 23:59:59");
+        } catch (\Exception $e) {
+            throw new InvalidDateException('Invalid date given to report.');
+        }
+
+        $this->results = [];
+
+        // Order Item Units values
+        $this->addResultsByElement(
+            $this->getOrderItemUnitValues($channel, $from, $to), 'variant_id', 'variant_name'
+        );
+        // Order Items values
+        $this->addResultsByElement(
+            $this->getOrderItemValues($channel, $from, $to), 'variant_id', 'variant_name'
+        );
+
+        // Populate array with options values data
+        $resultsWithOptions = $this->populateOptions($channel->getDefaultLocale()->getCode());
+
+        // Reinit results to generate a new one
+        $this->results = [];
+
+        $this->addResultsByElement($resultsWithOptions, 'option_code', 'option_label');
+
+        return $this->results;
+    }
+
+    /**
+     * Get sales per product option for channel between 2 date times
+     *
+     * @param ChannelInterface $channel
+     * @param \DateTimeInterface $from
+     * @param \DateTimeInterface|null $to
+     * @return array
+     * @throws InvalidDateException
+     */
+    public function getProductOptionValueSalesForChannelForDates(
+        ChannelInterface $channel,
+        \DateTimeInterface $from,
+        ?\DateTimeInterface $to = null
+    ): array {
+        $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
+        try {
+            $from = new \DateTime($from->format("Y-m-d")." 00:00:00");
+            $to   = new \DateTime($to->format("Y-m-d")." 23:59:59");
+        } catch (\Exception $e) {
+            throw new InvalidDateException('Invalid date given to report.');
+        }
+
+        $this->results = [];
+
+        // Order Item Units values
+        $this->addResultsByElement(
+            $this->getOrderItemUnitValues($channel, $from, $to), 'variant_id', 'variant_name'
+        );
+        // Order Items values
+        $this->addResultsByElement(
+            $this->getOrderItemValues($channel, $from, $to), 'variant_id', 'variant_name'
+        );
+
+        // Populate array with options values data
+        $resultsWithOptions = $this->populateOptions($channel->getDefaultLocale()->getCode());
+
+        // Reinit results to generate a new one
+        $this->results = [];
+
+        $this->addResultsByElement($resultsWithOptions, 'option_value_code', 'option_value_label');
 
         return $this->results;
     }
@@ -333,6 +427,59 @@ final class ReportRepository
         ;
     }
 
+    private function populateOptions(string $localeCode)
+    {
+        $variantOptions = $this->getVariantsOptions($localeCode);
+        $salesResults = [];
+
+        foreach($this->results as $result) {
+            $variantId = $result['variant_id'];
+            $options = $variantOptions[$variantId];
+
+            // Rename field with _total
+            foreach ($result as $key => $value) {
+                if (strpos($key, '_total')) {
+                    $result[str_replace('_total', '', $key)] = $value;
+                    unset($result[$key]);
+                }
+            }
+            foreach ($options as $optionCode => $option) {
+                $result['option_code'] = $optionCode;
+                $result['option_label'] = $option['label'];
+                $result['option_value_code'] = $option['value_code'];
+                $result['option_value_label'] = $option['value_label'];
+                $salesResults[] = $result;
+            }
+        }
+
+        return $salesResults;
+    }
+
+    private function getVariantsOptions(string $localeCode)
+    {
+        $queryBuilder = $this->productVariantRepository->createQueryBuilder('v')
+            ->select('v.id AS variant_id, option.code AS option_code, option_translation.name AS option_label, option_value.code AS option_value_code, option_value_translation.value AS option_value_label')
+            ->leftJoin('v.optionValues', 'option_value')
+            ->leftJoin('option_value.translations', 'option_value_translation', 'WITH', 'option_value_translation.locale = :locale')
+            ->leftJoin('option_value.option', 'option')
+            ->leftJoin('option.translations', 'option_translation', 'WITH', 'option_translation.locale = :locale')
+            ->setParameter('locale', $localeCode)
+        ;
+
+        $variantOptionsValues = [];
+
+        $result = $queryBuilder->getQuery()->getArrayResult();
+        foreach ($result as $variantOptionValue) {
+            $variantOptionsValues[$variantOptionValue['variant_id']][$variantOptionValue['option_code']] = [
+                'label' => $variantOptionValue['option_label'],
+                'value_code' => $variantOptionValue['option_value_code'],
+                'value_label' => $variantOptionValue['option_value_label'],
+            ];
+        }
+
+        return $variantOptionsValues;
+    }
+
     /**
      * Init the result with 0 totals
      */
@@ -396,6 +543,7 @@ final class ReportRepository
             }
             // Add results by order
             $this->addResults([$elementResult], 'order_id');
+            $this->result['order_id'] = $elementResult['order_id'];
 
             // Add extra fields
             $this->result[$groupField] = $elementId; // Grouped field ID

@@ -108,6 +108,8 @@ final class ReportsController extends AbstractController
             $averageSalesResult = $this->reportRepository->getAverageSalesForChannelForDates($channel, $from, $to);
             $productSalesResult = $this->reportRepository->getProductSalesForChannelForDates($channel, $from, $to);
             $productVariantSalesResult = $this->reportRepository->getProductVariantSalesForChannelForDates($channel, $from, $to);
+            $productOptionSalesResult = $this->reportRepository->getProductOptionSalesForChannelForDates($channel, $from, $to);
+            $productOptionValueSalesResult = $this->reportRepository->getProductOptionValueSalesForChannelForDates($channel, $from, $to);
         } catch (InvalidDateException $e) {
             $form->addError(new FormError($e->getMessage()));
             return $this->templatingEngine->renderResponse('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
@@ -125,6 +127,8 @@ final class ReportsController extends AbstractController
             'average_sales_result' => $averageSalesResult,
             'product_sales_result' => $productSalesResult,
             'product_variant_sales_result' => $productVariantSalesResult,
+            'product_option_sales_result' => $productOptionSalesResult,
+            'product_option_value_sales_result' => $productOptionValueSalesResult,
             'is_period' => $isPeriod
         ]);
     }

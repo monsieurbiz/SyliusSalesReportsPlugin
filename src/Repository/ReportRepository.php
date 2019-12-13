@@ -238,7 +238,7 @@ final class ReportRepository
         // Reinit results to generate a new one
         $this->results = [];
 
-        $this->addResultsByElement($resultsWithOptions, 'option_value_code', 'option_value_label');
+        $this->addResultsByElement($resultsWithOptions, 'option_value_code', 'option_value_label', ['option_code', 'option_label']);
 
         return $this->results;
     }
@@ -427,7 +427,13 @@ final class ReportRepository
         ;
     }
 
-    private function populateOptions(string $localeCode)
+    /**
+     * Populate result array with options and option values data
+     *
+     * @param string $localeCode
+     * @return array
+     */
+    private function populateOptions(string $localeCode): array
     {
         $variantOptions = $this->getVariantsOptions($localeCode);
         $salesResults = [];
@@ -455,7 +461,13 @@ final class ReportRepository
         return $salesResults;
     }
 
-    private function getVariantsOptions(string $localeCode)
+    /**
+     * Retrieve options for all variants and build an array
+     *
+     * @param string $localeCode
+     * @return array
+     */
+    private function getVariantsOptions(string $localeCode): array
     {
         $queryBuilder = $this->productVariantRepository->createQueryBuilder('v')
             ->select('v.id AS variant_id, option.code AS option_code, option_translation.name AS option_label, option_value.code AS option_value_code, option_value_translation.value AS option_value_label')
@@ -528,8 +540,9 @@ final class ReportRepository
      * @param array $elementResults
      * @param string $groupField
      * @param string|null $labelField
+     * @param array|null $extraFields
      */
-    private function addResultsByElement(array $elementResults, string $groupField, ?string $labelField = null): void
+    private function addResultsByElement(array $elementResults, string $groupField, ?string $labelField = null, ?array $extraFields = null): void
     {
         // Loop on given elements to increments current result
         foreach ($elementResults as $elementResult) {
@@ -549,6 +562,13 @@ final class ReportRepository
             $this->result[$groupField] = $elementId; // Grouped field ID
             if ($labelField && isset($elementResult[$labelField]) && !empty($elementResult[$labelField])) {
                 $this->result[$labelField] = $elementResult[$labelField]; // Grouped field label if given
+            }
+            if (!empty($extraFields)) {
+                foreach ($extraFields as $extraField) {
+                    if (isset($elementResult[$extraField])) {
+                        $this->result[$extraField] = $elementResult[$extraField];
+                    }
+                }
             }
 
             // Update results for this element

@@ -1,5 +1,3 @@
-{% import "@SyliusAdmin/Common/Macro/money.html.twig" as money %}
-
 <div class="ui hidden divider"></div>
 
 <div class="ui segment">
@@ -9,86 +7,10 @@
         <h2>{{ 'monsieur_biz_sales_reports.ui.day_report_for'|trans({'%date%': from|date("d/m/Y"), '%channel%': channel.name}) }}</h2>
     {% endif %}
     <div class="ui basic segment">
-        <h3>{{ 'monsieur_biz_sales_reports.ui.global_report'|trans }}</h3>
-        <table class="ui celled table">
-            <thead>
-            <tr>
-                <th>{{ 'monsieur_biz_sales_reports.view.amount_without_tax' | trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.promo_amount_without_tax' | trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.shipping_amount_without_tax' | trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.tax_amount' | trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.total_amount' | trans }}</th>
-            </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ money.format(total_sales_result.without_tax_total, channel.baseCurrency.code) }}</td>
-                    <td>{{ money.format(total_sales_result.without_tax_promo_total, channel.baseCurrency.code) }}</td>
-                    <td>{{ money.format(total_sales_result.without_tax_shipping_total, channel.baseCurrency.code) }}</td>
-                    <td>{{ money.format(total_sales_result.tax_total, channel.baseCurrency.code) }}</td>
-                    <td>{{ money.format(total_sales_result.total, channel.baseCurrency.code) }}</td>
-                </tr>
-            </tbody>
-        </table>
+        {% include('@MonsieurBizSyliusSalesReportsPlugin/Admin/Report/_global.html.twig') %}
         <div class="ui hidden divider"></div>
-        <h3>{{ 'monsieur_biz_sales_reports.ui.average_report'|trans }}</h3>
-        <p>
-            {{ 'monsieur_biz_sales_reports.ui.number_of_orders'|trans }}
-            <b>{{ average_sales_result.number_of_elements }}</b>
-        </p>
-        <table class="ui celled table">
-            <thead>
-            <tr>
-                <th>{{ 'monsieur_biz_sales_reports.view.amount_without_tax' | trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.promo_amount_without_tax' | trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.shipping_amount_without_tax' | trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.tax_amount' | trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.total_amount' | trans }}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{{ money.format(average_sales_result.without_tax_total, channel.baseCurrency.code) }}</td>
-                <td>{{ money.format(average_sales_result.without_tax_promo_total, channel.baseCurrency.code) }}</td>
-                <td>{{ money.format(average_sales_result.without_tax_shipping_total, channel.baseCurrency.code) }}</td>
-                <td>{{ money.format(average_sales_result.tax_total, channel.baseCurrency.code) }}</td>
-                <td>{{ money.format(average_sales_result.total, channel.baseCurrency.code) }}</td>
-            </tr>
-            </tbody>
-        </table>
+        {% include('@MonsieurBizSyliusSalesReportsPlugin/Admin/Report/_average.html.twig') %}
         <div class="ui hidden divider"></div>
-        <h3>{{ 'monsieur_biz_sales_reports.ui.product_report'|trans }}</h3>
-        <table class="ui celled table">
-            <thead>
-            <tr>
-                <th>{{ 'monsieur_biz_sales_reports.view.product_variant_name'|trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.number_of_orders'|trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.amount_without_tax' | trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.promo_amount_without_tax' | trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.shipping_amount_without_tax' | trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.tax_amount' | trans }}</th>
-                <th>{{ 'monsieur_biz_sales_reports.view.total_amount' | trans }}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {%  if product_variant_sales_result|length > 0 %}
-                {% for result in product_variant_sales_result %}
-                    <tr>
-                        <td>{{ result.variant_name }}</td>
-                        <td>{{ result.number_of_elements }}</td>
-                        <td>{{ money.format(result.without_tax_total, channel.baseCurrency.code) }}</td>
-                        <td>{{ money.format(result.without_tax_promo_total, channel.baseCurrency.code) }}</td>
-                        <td>{{ money.format(result.without_tax_shipping_total, channel.baseCurrency.code) }}</td>
-                        <td>{{ money.format(result.tax_total, channel.baseCurrency.code) }}</td>
-                        <td>{{ money.format(result.item_row_total, channel.baseCurrency.code) }}</td>
-                    </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td>{{ 'monsieur_biz_sales_reports.view.no_result'|trans }}</td>
-                </tr>
-            {% endif %}
-            </tbody>
-        </table>
+        {% include('@MonsieurBizSyliusSalesReportsPlugin/Admin/Report/_productVariant.html.twig') %}
     </div>
 </div>

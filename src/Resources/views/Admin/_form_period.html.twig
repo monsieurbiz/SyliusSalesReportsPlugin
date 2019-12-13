@@ -1,0 +1,16 @@
+<div class="ui hidden divider"></div>
+
+{{ form_start(form_period, {'action': path('monsieur_biz_sylius_sales_reports_admin_view'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
+<div class="ui segment">
+    <h2>{{ 'monsieur_biz_sales_reports.ui.period_report'|trans }}</h2>
+    {{ form_row(form_period.from) }}
+    {{ form_row(form_period.to) }}
+    {{ form_row(form_period.channel) }}
+    <div class="ui basic segment">
+        <div class="ui buttons">
+            <button class="ui labeled icon primary button" type="submit"><i class="search icon"></i>{{ 'sylius.ui.generate'|trans }}</button>
+        </div>
+    </div>
+</div>
+{{ form_row(form_period._token) }}
+{{ form_end(form_period, {'render_rest': false}) }}

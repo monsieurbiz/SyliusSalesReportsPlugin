@@ -3,8 +3,11 @@
 <div class="ui hidden divider"></div>
 
 <div class="ui segment">
-    <h2>{{ 'monsieur_biz_sales_reports.ui.day_report_for'|trans({'%date%': date|date("d/m/Y"), '%channel%': channel.name}) }}</h2>
-    {{ form_row(form.date) }}
+    {% if from != to %}
+        <h2>{{ 'monsieur_biz_sales_reports.ui.period_report_for'|trans({'%from%': from|date("d/m/Y"), '%to%': to|date("d/m/Y"), '%channel%': channel.name}) }}</h2>
+    {% else %}
+        <h2>{{ 'monsieur_biz_sales_reports.ui.day_report_for'|trans({'%date%': from|date("d/m/Y"), '%channel%': channel.name}) }}</h2>
+    {% endif %}
     <div class="ui basic segment">
         <table class="ui celled table">
             <thead>
@@ -17,13 +20,12 @@
             </tr>
             </thead>
             <tbody>
-            {% dump(totalSalesResult) %}
                 <tr>
-                    <td>{{ money.format(totalSalesResult.without_tax_total, channel.baseCurrency.code) }}</td>
-                    <td>{{ money.format(totalSalesResult.without_tax_promo_total, channel.baseCurrency.code) }}</td>
-                    <td>{{ money.format(totalSalesResult.without_tax_shipping_total, channel.baseCurrency.code) }}</td>
-                    <td>{{ money.format(totalSalesResult.tax_total, channel.baseCurrency.code) }}</td>
-                    <td>{{ money.format(totalSalesResult.total, channel.baseCurrency.code) }}</td>
+                    <td>{{ money.format(total_sales_result.without_tax_total, channel.baseCurrency.code) }}</td>
+                    <td>{{ money.format(total_sales_result.without_tax_promo_total, channel.baseCurrency.code) }}</td>
+                    <td>{{ money.format(total_sales_result.without_tax_shipping_total, channel.baseCurrency.code) }}</td>
+                    <td>{{ money.format(total_sales_result.tax_total, channel.baseCurrency.code) }}</td>
+                    <td>{{ money.format(total_sales_result.total, channel.baseCurrency.code) }}</td>
                 </tr>
             </tbody>
         </table>

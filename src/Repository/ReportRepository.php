@@ -25,6 +25,11 @@ final class ReportRepository
     protected $result;
 
     /**
+     * @var array
+     */
+    protected $elements;
+
+    /**
      * ReportRepository constructor.
      * @param RepositoryInterface $orderRepository
      */
@@ -45,38 +50,61 @@ final class ReportRepository
             'tax_total' => 0,
             'total' => 0,
         ];
+        $this->elements = [];
     }
 
     /**
      * Increment results with given array
      *
      * @param $elementResults
+     * @param string $averageField
      */
-    private function addResults($elementResults)
+    private function addResults($elementResults, $averageField = '')
     {
+        // Loop on given elements to increments current result
         foreach ($elementResults as $elementResult) {
-            foreach($this->result as $key => $val) {
+            foreach ($this->result as $key => $val) {
+                // Get the field key, for example `without_tax_shipping` if we need to increment `without_tax_shipping_total`
                 $resultKey = str_replace('_total', '', $key);
                 if (isset($elementResult[$resultKey])) {
                     $this->result[$key] += (int) $elementResult[$resultKey]; // Cast in int because doctrine return string for columns with `+`, and we can have null values
                 }
             }
+            // Add average field value if we got one, for example, an order ID to have an average per order
+            if (!empty($averageField)) {
+                $this->elements[$elementResult[$averageField]] = $elementResult[$averageField];
+            }
         }
     }
 
     /**
-     * Get total sales for channel between 2 date times
+     * Make the average of results depending on number of elements
+     */
+    private function averageResult()
+    {
+        if (!empty($this->elements)) {
+            $numberOfElements = count($this->elements);
+            foreach ($this->result as $key => $val) {
+                $this->result[$key] = round($this->result[$key] / $numberOfElements);
+            }
+        }
+    }
+
+    /**
+     * Get total sales for channel between 2 date times, or average sales from a given field
      *
      * @param ChannelInterface $channel
      * @param \DateTimeInterface $from
      * @param \DateTimeInterface|null $to
+     * @param string $averageField
      * @return array
      * @throws InvalidDateException
      */
     public function getSalesForChannelForDates(
         ChannelInterface $channel,
         \DateTimeInterface $from,
-        ?\DateTimeInterface $to = null
+        ?\DateTimeInterface $to = null,
+        $averageField = ''
     ): array {
         $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
         try {
@@ -89,13 +117,34 @@ final class ReportRepository
         $this->initResult();
 
         // Order Item Units values
-        $this->addResults($this->getOrderItemUnitValues($channel, $from, $to));
+        $this->addResults($this->getOrderItemUnitValues($channel, $from, $to), $averageField);
         // Order Items values
-        $this->addResults($this->getOrderItemValues($channel, $from, $to));
+        $this->addResults($this->getOrderItemValues($channel, $from, $to), $averageField);
         // Order values
-        $this->addResults($this->getOrderValues($channel, $from, $to));
+        $this->addResults($this->getOrderValues($channel, $from, $to), $averageField);
+
+        // Divide results by number of elements if needed
+        $this->averageResult();
 
         return $this->result;
+    }
+
+
+    /**
+     * Get average sales for channel between 2 date times
+     *
+     * @param ChannelInterface $channel
+     * @param \DateTimeInterface $from
+     * @param \DateTimeInterface|null $to
+     * @return array
+     * @throws InvalidDateException
+     */
+    public function getAverageSalesForChannelForDates(
+        ChannelInterface $channel,
+        \DateTimeInterface $from,
+        ?\DateTimeInterface $to = null
+    ): array {
+        return $this->getSalesForChannelForDates($channel, $from, $to, 'order_id');
     }
 
     /**
@@ -170,6 +219,7 @@ final class ReportRepository
     private function getSelectColumns($isItemUnit = false, $isOrder = false): string
     {
         return implode(',',[
+            'o.id as order_id',
             $isItemUnit ? 'item.unitPrice as without_tax' : '0 as without_tax', // Only retrieve without_tax price for item units
             '(COALESCE(order_promotion_adjustment.amount, 0) + COALESCE(order_item_promotion_adjustment.amount, 0) + COALESCE(order_shipping_promotion_adjustment.amount, 0) + COALESCE(order_unit_promotion_adjustment.amount, 0)) AS without_tax_promo',
             'shipping_adjustment.amount as without_tax_shipping',

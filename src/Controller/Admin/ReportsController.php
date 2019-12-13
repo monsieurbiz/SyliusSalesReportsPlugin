@@ -99,6 +99,7 @@ final class ReportsController extends AbstractController
         // Form is valid, we can generate the report
         try {
             $totalSalesResult = $this->reportRepository->getSalesForChannelForDates($channel, $from, $to);
+            $averageSalesResult = $this->reportRepository->getAverageSalesForChannelForDates($channel, $from, $to);
         } catch (InvalidDateException $e) {
             $form->addError(new FormError($e->getMessage()));
             return $this->templatingEngine->renderResponse('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
@@ -113,6 +114,7 @@ final class ReportsController extends AbstractController
             'to' => $to,
             'channel' => $data['channel'],
             'total_sales_result' => $totalSalesResult,
+            'average_sales_result' => $averageSalesResult,
             'is_period' => $isPeriod
         ]);
     }

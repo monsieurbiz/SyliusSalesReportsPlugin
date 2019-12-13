@@ -7,6 +7,7 @@
 {% block title %}{{ header|trans }} {{ parent() }}{% endblock %}
 
 {% form_theme form '@SyliusAdmin/Form/theme.html.twig' %}
+{% form_theme form_period '@SyliusAdmin/Form/theme.html.twig' %}
 
 {% block content %}
     {% include('@MonsieurBizSyliusSalesReportsPlugin/Admin/_header.html.twig') %}

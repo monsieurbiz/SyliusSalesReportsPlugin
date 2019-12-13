@@ -87,6 +87,7 @@ final class ReportRepository
             foreach ($this->result as $key => $val) {
                 $this->result[$key] = round($this->result[$key] / $numberOfElements);
             }
+            $this->result['number_of_elements'] = count($this->elements);
         }
     }
 

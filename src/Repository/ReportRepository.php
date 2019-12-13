@@ -56,10 +56,10 @@ final class ReportRepository
     /**
      * Increment results with given array
      *
-     * @param $elementResults
-     * @param string $averageField
+     * @param array $elementResults
+     * @param string|null $averageField
      */
-    private function addResults($elementResults, $averageField = '')
+    private function addResults(array $elementResults, ?string $averageField = null): void
     {
         // Loop on given elements to increments current result
         foreach ($elementResults as $elementResult) {
@@ -71,7 +71,7 @@ final class ReportRepository
                 }
             }
             // Add average field value if we got one, for example, an order ID to have an average per order
-            if (!empty($averageField)) {
+            if ($averageField !== null) {
                 $this->elements[$elementResult[$averageField]] = $elementResult[$averageField];
             }
         }
@@ -80,14 +80,14 @@ final class ReportRepository
     /**
      * Make the average of results depending on number of elements
      */
-    private function averageResult()
+    private function averageResult(): void
     {
         if (!empty($this->elements)) {
             $numberOfElements = count($this->elements);
             foreach ($this->result as $key => $val) {
                 $this->result[$key] = round($this->result[$key] / $numberOfElements);
             }
-            $this->result['number_of_elements'] = count($this->elements);
+                $this->result['number_of_elements'] = count($this->elements);
         }
     }
 
@@ -97,7 +97,7 @@ final class ReportRepository
      * @param ChannelInterface $channel
      * @param \DateTimeInterface $from
      * @param \DateTimeInterface|null $to
-     * @param string $averageField
+     * @param string|null $averageField
      * @return array
      * @throws InvalidDateException
      */
@@ -105,7 +105,7 @@ final class ReportRepository
         ChannelInterface $channel,
         \DateTimeInterface $from,
         ?\DateTimeInterface $to = null,
-        $averageField = ''
+        ?string $averageField = null
     ): array {
         $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
         try {
@@ -217,7 +217,7 @@ final class ReportRepository
      * @param bool $isOrder
      * @return string
      */
-    private function getSelectColumns($isItemUnit = false, $isOrder = false): string
+    private function getSelectColumns(bool $isItemUnit = false, bool $isOrder = false): string
     {
         return implode(',',[
             'o.id as order_id',
@@ -244,7 +244,7 @@ final class ReportRepository
         ChannelInterface $channel,
         \DateTimeInterface $from,
         \DateTimeInterface $to,
-        $isOrder = false
+        bool $isOrder = false
     ) {
         $elementAlias = $isOrder ? 'o' : 'element';
         return $queryBuilder

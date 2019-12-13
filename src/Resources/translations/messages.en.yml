@@ -1,4 +1,34 @@
 monsieur_biz_sales_reports:
+  ui:
+    title: 'Sales reports'
+    subtitle: 'View your sales reports'
+    day_report: 'Daily report'
+    day_report_for: 'Daily report for %date% for %channel%'
+    period_report: 'Period report'
+    period_report_for: 'Period report from %from% to %to% for %channel%'
+    global_report: 'Global report'
+    average_report: 'Average report'
+    number_of_orders: 'Number of orders :'
+    product_report: 'Product report'
+    product_variant_report: 'Product variant report'
+    option_report: 'Option report'
+    option_value_report: 'Option value report'
   form:
     date:
       label: 'Specific day'
+    from_date:
+      label: 'From'
+    to_date:
+      label: 'To'
+  view:
+    amount_without_tax: 'Amount without tax'
+    promo_amount_without_tax: 'Promo amount without tax'
+    shipping_amount_without_tax: 'Shipping amount without tax'
+    tax_amount: 'Tax amount'
+    total_amount: 'Total amount with tax'
+    number_of_orders: 'Number of orders'
+    product_name: 'Product name'
+    product_variant_name: 'Product variant name'
+    no_result: 'No result'
+    option_name: 'Option name'
+    option_value: 'Option value'

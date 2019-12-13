@@ -4,12 +4,31 @@ monsieur_biz_sales_reports:
     subtitle: 'Visualisez les rapports de vos ventes'
     day_report: 'Rapport journalier'
     day_report_for: 'Rapport journalier le %date% pour %channel%'
+    period_report: 'Rapport sur la periode'
+    period_report_for: 'Rapport sur la periode du %from% au %to% pour %channel%'
+    global_report: 'Synthèse globale'
+    average_report: 'Synthèse moyenne'
+    number_of_orders: 'Nombre de commandes :'
+    product_report: 'Synthèse par produit'
+    product_variant_report: 'Synthèse par variante produit'
+    option_report: 'Synthèse par option'
+    option_value_report: 'Synthèse par valeur d''option'
   form:
     date:
       label: 'Journée spécifique'
+    from_date:
+      label: 'Du'
+    to_date:
+      label: 'Au'
   view:
     amount_without_tax: 'Montant HT'
     promo_amount_without_tax: 'Montant Promo HT'
     shipping_amount_without_tax: 'Montant Livraison HT'
     tax_amount: 'Montant TVA'
     total_amount: 'Montant TTC'
+    number_of_orders: 'Nombre de commandes'
+    product_name: 'Nom du produit'
+    product_variant_name: 'Nom du variant produit'
+    no_result: 'Pas de résultat'
+    option_name: 'Nom de l''option'
+    option_value: 'Valeur de l''option'

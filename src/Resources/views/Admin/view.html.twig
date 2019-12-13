@@ -18,3 +18,9 @@
     {% endif %}
     {% include('@MonsieurBizSyliusSalesReportsPlugin/Admin/_report.html.twig') %}
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/monsieurbizsyliussalesreportsplugin/js/table_sort.js'} %}
+    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/monsieurbizsyliussalesreportsplugin/js/table_init.js'} %}
+{% endblock %}

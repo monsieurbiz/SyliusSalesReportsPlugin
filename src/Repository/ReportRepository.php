@@ -14,6 +14,10 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class ReportRepository
 {
+    // Adjustment if Admin Order Creation plugin is installed
+    public const ADMIN_ORDER_DISCOUNT_ADJUSTMENT = 'order_discount';
+    public const ADMIN_ORDER_ITEM_DISCOUNT_ADJUSTMENT = 'order_item_discount';
+
     /**
      * @var RepositoryInterface
      */
@@ -402,15 +406,17 @@ final class ReportRepository
             // Adjustments joins
             ->leftJoin($elementAlias . '.adjustments', 'tax_adjustment', 'WITH', 'tax_adjustment.type = :tax_type')
             ->leftJoin($elementAlias . '.adjustments', 'shipping_adjustment', 'WITH', 'shipping_adjustment.type = :shipping_type')
-            ->leftJoin($elementAlias . '.adjustments', 'order_promotion_adjustment', 'WITH', 'order_promotion_adjustment.type = :order_promotion_type')
-            ->leftJoin($elementAlias . '.adjustments', 'order_item_promotion_adjustment', 'WITH', 'order_item_promotion_adjustment.type = :order_item_promotion_type')
+            ->leftJoin($elementAlias . '.adjustments', 'order_promotion_adjustment', 'WITH', 'order_promotion_adjustment.type = :order_promotion_type OR order_promotion_adjustment.type = :admin_order_promotion_type')
+            ->leftJoin($elementAlias . '.adjustments', 'order_item_promotion_adjustment', 'WITH', 'order_item_promotion_adjustment.type = :order_item_promotion_type OR order_item_promotion_adjustment.type = :admin_order_item_promotion_type')
             ->leftJoin($elementAlias . '.adjustments', 'order_shipping_promotion_adjustment', 'WITH', 'order_shipping_promotion_adjustment.type = :order_shipping_promotion_type')
             ->leftJoin($elementAlias . '.adjustments', 'order_unit_promotion_adjustment', 'WITH', 'order_unit_promotion_adjustment.type = :order_unit_promotion_type')
             // Adjustments parameters
             ->setParameter('tax_type', AdjustmentInterface::TAX_ADJUSTMENT)
             ->setParameter('shipping_type', AdjustmentInterface::SHIPPING_ADJUSTMENT)
             ->setParameter('order_promotion_type', AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT)
+            ->setParameter('admin_order_promotion_type', self::ADMIN_ORDER_DISCOUNT_ADJUSTMENT)
             ->setParameter('order_item_promotion_type', AdjustmentInterface::ORDER_ITEM_PROMOTION_ADJUSTMENT)
+            ->setParameter('admin_order_item_promotion_type', self::ADMIN_ORDER_ITEM_DISCOUNT_ADJUSTMENT)
             ->setParameter('order_shipping_promotion_type', AdjustmentInterface::ORDER_SHIPPING_PROMOTION_ADJUSTMENT)
             ->setParameter('order_unit_promotion_type', AdjustmentInterface::ORDER_UNIT_PROMOTION_ADJUSTMENT)
             // Filters on orders in channel, which are paid, not refunded and completed between the wanted dates

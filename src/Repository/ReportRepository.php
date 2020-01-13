@@ -562,11 +562,15 @@ final class ReportRepository
             $this->result[$groupField] = $elementId; // Grouped field ID
             if ($labelField && isset($elementResult[$labelField]) && !empty($elementResult[$labelField])) {
                 $this->result[$labelField] = $elementResult[$labelField]; // Grouped field label if given
+            } elseif($labelField && (!isset($elementResult[$labelField]) || empty($elementResult[$labelField]))) {
+                $this->result[$labelField] = '';
             }
             if (!empty($extraFields)) {
                 foreach ($extraFields as $extraField) {
                     if (isset($elementResult[$extraField])) {
                         $this->result[$extraField] = $elementResult[$extraField];
+                    } else {
+                        $this->result[$extraField] = '';
                     }
                 }
             }

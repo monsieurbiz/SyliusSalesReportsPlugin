@@ -26,7 +26,7 @@
         // Define money regex for `table_init.js`
         let currency = '{{ money.format(0, channel.baseCurrency.code) }}';
         currency = currency.replace(/[0-9,\\s\.]+/g, '').trim();
-        var moneyRegex = new RegExp('^[0-9,\\s\.'+ currency +']+$', 'g');
+        var moneyRegex = new RegExp('^[\-0-9,\\s\.'+ currency +']+$', 'g');
     </script>
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/monsieurbizsyliussalesreportsplugin/js/table_sort.js'} %}
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/monsieurbizsyliussalesreportsplugin/js/table_init.js'} %}

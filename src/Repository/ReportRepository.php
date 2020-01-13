@@ -373,7 +373,7 @@ final class ReportRepository
             ($isItemUnit ? 'CONCAT(item.productName, \' \' ,item.variantName) as variant_name' : ($isItem ? 'CONCAT(element.productName, \' \' , element.variantName) as variant_name' : '\'\' as variant_name')),
 
             // Adjustments
-            $isItemUnit ? 'item.unitPrice as without_tax' : '0 as without_tax', // Only retrieve without_tax price for item units
+            $isItemUnit ? 'item.unitPrice - tax_adjustment.amount as without_tax' : '0 as without_tax', // Only retrieve without_tax price for item units
             '(COALESCE(order_promotion_adjustment.amount, 0) + COALESCE(order_item_promotion_adjustment.amount, 0) + COALESCE(order_shipping_promotion_adjustment.amount, 0) + COALESCE(order_unit_promotion_adjustment.amount, 0)) AS without_tax_promo',
             'shipping_adjustment.amount as without_tax_shipping',
             'tax_adjustment.amount as tax',

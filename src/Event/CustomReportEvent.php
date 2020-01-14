@@ -6,6 +6,7 @@ namespace MonsieurBiz\SyliusSalesReportsPlugin\Event;
 
 use MonsieurBiz\SyliusSalesReportsPlugin\Exception\AlreadyExistsReport;
 use MonsieurBiz\SyliusSalesReportsPlugin\Exception\NotExistsReport;
+use Sylius\Component\Core\Model\ChannelInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 final class CustomReportEvent extends Event
@@ -14,6 +15,31 @@ final class CustomReportEvent extends Event
      * @var array
      */
     private $customReports = [];
+
+    /**
+     * @var ChannelInterface
+     */
+    private $channel;
+
+    /**
+     * @var \DateTimeInterface
+     */
+    private $fromDate;
+
+    /**
+     * @var \DateTimeInterface|null
+     */
+    private $toDate;
+
+    public function __construct(
+        ChannelInterface $channel,
+        \DateTimeInterface $fromDate,
+        ?\DateTimeInterface $toDate = null
+    ) {
+        $this->channel = $channel;
+        $this->fromDate = $fromDate;
+        $this->toDate = $toDate;
+    }
 
     /**
      * Retrieve custom reports, use a template override to display it
@@ -52,5 +78,29 @@ final class CustomReportEvent extends Event
             throw new NotExistsReport(sprintf('Report "%s" does not exist', $key));
         }
         unset($this->customReports[$key]);
+    }
+
+    /**
+     * @return ChannelInterface
+     */
+    public function getChannel(): ChannelInterface
+    {
+        return $this->channel;
+    }
+
+    /**
+     * @return \DateTimeInterface
+     */
+    public function getFromDate(): \DateTimeInterface
+    {
+        return $this->fromDate;
+    }
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getToDate(): ?\DateTimeInterface
+    {
+        return $this->toDate;
     }
 }

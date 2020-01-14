@@ -129,7 +129,7 @@ final class ReportsController extends AbstractController
             ]);
         }
 
-        $event = new CustomReportEvent();
+        $event = new CustomReportEvent($channel, $from, $to);
         $this->eventDispatcher->dispatch(self::APPEND_REPORTS_EVENT, $event);
 
         return $this->templatingEngine->renderResponse('@MonsieurBizSyliusSalesReportsPlugin/Admin/view.html.twig', [

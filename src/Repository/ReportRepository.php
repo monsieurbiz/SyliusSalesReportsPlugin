@@ -291,7 +291,7 @@ class ReportRepository
      * @param \DateTimeInterface $to
      * @return array
      */
-    private function getOrderItemUnitValues(
+    protected function getOrderItemUnitValues(
         ChannelInterface $channel,
         \DateTimeInterface $from,
         \DateTimeInterface $to
@@ -314,7 +314,7 @@ class ReportRepository
      * @param \DateTimeInterface $to
      * @return array
      */
-    private function getOrderItemValues(
+    protected function getOrderItemValues(
         ChannelInterface $channel,
         \DateTimeInterface $from,
         \DateTimeInterface $to
@@ -336,7 +336,7 @@ class ReportRepository
      * @param \DateTimeInterface $to
      * @return array
      */
-    private function getOrderValues(
+    protected function getOrderValues(
         ChannelInterface $channel,
         \DateTimeInterface $from,
         \DateTimeInterface $to
@@ -358,7 +358,7 @@ class ReportRepository
      * @param bool $isOrder
      * @return string
      */
-    private function getSelectColumns(bool $isItemUnit = false, bool $isItem = false, bool $isOrder = false): string
+    protected function getSelectColumns(bool $isItemUnit = false, bool $isItem = false, bool $isOrder = false): string
     {
         return implode(',',[
             // Order ID
@@ -394,7 +394,7 @@ class ReportRepository
      * @param bool $isOrder
      * @return mixed
      */
-    private function appendAdjustmentsAndParameters(
+    protected function appendAdjustmentsAndParameters(
         QueryBuilder $queryBuilder,
         ChannelInterface $channel,
         \DateTimeInterface $from,
@@ -439,7 +439,7 @@ class ReportRepository
      * @param string $localeCode
      * @return array
      */
-    private function populateOptions(string $localeCode): array
+    protected function populateOptions(string $localeCode): array
     {
         $variantOptions = $this->getVariantsOptions($localeCode);
         $salesResults = [];
@@ -473,7 +473,7 @@ class ReportRepository
      * @param string $localeCode
      * @return array
      */
-    private function getVariantsOptions(string $localeCode): array
+    protected function getVariantsOptions(string $localeCode): array
     {
         $queryBuilder = $this->productVariantRepository->createQueryBuilder('v')
             ->select('v.id AS variant_id, option.code AS option_code, option_translation.name AS option_label, option_value.code AS option_value_code, option_value_translation.value AS option_value_label')
@@ -501,7 +501,7 @@ class ReportRepository
     /**
      * Init the result with 0 totals
      */
-    private function initResult()
+    protected function initResult()
     {
         $this->result = [
             'without_tax_total' => 0,
@@ -520,7 +520,7 @@ class ReportRepository
      * @param array $elementResults
      * @param string|null $groupField
      */
-    private function addResults(array $elementResults, ?string $groupField = null): void
+    protected function addResults(array $elementResults, ?string $groupField = null): void
     {
         // Loop on given elements to increments current result
         foreach ($elementResults as $elementResult) {
@@ -548,7 +548,7 @@ class ReportRepository
      * @param string|null $labelField
      * @param array|null $extraFields
      */
-    private function addResultsByElement(array $elementResults, string $groupField, ?string $labelField = null, ?array $extraFields = null): void
+    protected function addResultsByElement(array $elementResults, string $groupField, ?string $labelField = null, ?array $extraFields = null): void
     {
         // Loop on given elements to increments current result
         foreach ($elementResults as $elementResult) {
@@ -595,7 +595,7 @@ class ReportRepository
     /**
      * Make the average of results depending on number of elements
      */
-    private function averageResult(): void
+    protected function averageResult(): void
     {
         if (!empty($this->elements)) {
             $numberOfElements = count($this->elements);

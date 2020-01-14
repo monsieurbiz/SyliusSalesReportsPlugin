@@ -12,7 +12,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-final class ReportRepository
+class ReportRepository
 {
     // Adjustment if Admin Order Creation plugin is installed
     public const ADMIN_ORDER_DISCOUNT_ADJUSTMENT = 'order_discount';

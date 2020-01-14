@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin\Controller\Admin;
 
+use MonsieurBiz\SyliusSalesReportsPlugin\Event\CustomReportEvent;
 use MonsieurBiz\SyliusSalesReportsPlugin\Exception\InvalidDateException;
 use MonsieurBiz\SyliusSalesReportsPlugin\Form\Type\PeriodType;
 use MonsieurBiz\SyliusSalesReportsPlugin\Repository\ReportRepository;
@@ -15,9 +16,12 @@ use Symfony\Component\HttpFoundation\Response;
 use MonsieurBiz\SyliusSalesReportsPlugin\Form\Type\DateType;
 use Symfony\Component\Templating\EngineInterface;
 use Webmozart\Assert\Assert;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class ReportsController extends AbstractController
 {
+    const APPEND_REPORTS_EVENT = 'monsieurbiz.sylius_sales_report.append_reports';
+
     /**
      * @var ReportRepository
      */
@@ -29,16 +33,24 @@ final class ReportsController extends AbstractController
     private $templatingEngine;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
      * ReportsController constructor.
      * @param EngineInterface $templatingEngine
      * @param ReportRepository $reportRepository
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         EngineInterface $templatingEngine,
-        ReportRepository $reportRepository
+        ReportRepository $reportRepository,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->templatingEngine = $templatingEngine;
         $this->reportRepository = $reportRepository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -117,6 +129,9 @@ final class ReportsController extends AbstractController
             ]);
         }
 
+        $event = new CustomReportEvent();
+        $this->eventDispatcher->dispatch(self::APPEND_REPORTS_EVENT, $event);
+
         return $this->templatingEngine->renderResponse('@MonsieurBizSyliusSalesReportsPlugin/Admin/view.html.twig', [
             'form' => $form->createView(),
             'form_period' => $formPeriod->createView(),
@@ -129,7 +144,8 @@ final class ReportsController extends AbstractController
             'product_variant_sales_result' => $productVariantSalesResult,
             'product_option_sales_result' => $productOptionSalesResult,
             'product_option_value_sales_result' => $productOptionValueSalesResult,
-            'is_period' => $isPeriod
+            'is_period' => $isPeriod,
+            'custom_reports' => $event->getCustomReports(),
         ]);
     }
 }

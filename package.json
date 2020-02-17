@@ -1,0 +1,32 @@
+{
+  "name": "monsieurbiz-sylius-rich-editor-plugin",
+  "version": "0.0.1",
+  "description": "Add and manage custom content blocks in your content",
+  "main": "webpack.config.js",
+  "scripts": {
+    "build": "encore production",
+    "watch": "encore dev --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/monsieurbiz/sylius-rich-editor-plugin.git"
+  },
+  "author": "Monsieur Biz <hello@monsieurbiz.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/monsieurbiz/sylius-rich-editor-plugin/issues"
+  },
+  "homepage": "https://github.com/monsieurbiz/sylius-rich-editor-plugin#readme",
+  "devDependencies": {
+    "@symfony/webpack-encore": "^0.28.1",
+    "autoprefixer": "^9.7.3",
+    "node-sass": "^4.13.0",
+    "postcss-loader": "^3.0.0",
+    "sass-loader": "^7.3.1"
+  },
+  "dependencies": {
+    "dragula": "^3.7.2",
+    "pell": "^1.0.6",
+    "tingle.js": "^0.15.2"
+  }
+}

@@ -16,6 +16,8 @@
 
 A simple plugin to have sales reports in Sylius
 
+![Reports form](screenshots/reports_form.png)
+
 ## Installation
 
 ```bash
@@ -47,6 +49,38 @@ Finally import the routes in `config/routes.yaml` :
 monsieur_biz_sales_reports_plugin:
     resource: "@MonsieurBizSyliusSalesReportsPlugin/Resources/config/routing.yaml"
 ```
+
+## Reports
+
+All reports columns are sortable by clicking on it.
+
+### Global sales report
+
+![Global sales report](screenshots/global.png)
+
+### Average sales report
+
+![Average sales report](screenshots/average.png)
+
+### Product report
+
+![Product report](screenshots/product.png)
+
+### Product variant report
+
+![Product variant report](screenshots/product_variant.png)
+
+### Option report
+
+![Option report](screenshots/option.png)
+
+### Option value report
+
+![Option value report](screenshots/option_value.png)
+
+### Add your custom reports !
+
+An event is available to add your custom reports, see `CustomReportEvent` class in the plugin.
 
 ## Contributing
 

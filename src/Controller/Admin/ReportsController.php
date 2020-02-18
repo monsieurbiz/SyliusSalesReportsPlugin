@@ -14,7 +14,6 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use MonsieurBiz\SyliusSalesReportsPlugin\Form\Type\DateType;
-use Symfony\Component\Templating\EngineInterface;
 use Webmozart\Assert\Assert;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -28,27 +27,19 @@ final class ReportsController extends AbstractController
     protected $reportRepository;
 
     /**
-     * @var EngineInterface
-     */
-    private $templatingEngine;
-
-    /**
      * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
 
     /**
      * ReportsController constructor.
-     * @param EngineInterface $templatingEngine
      * @param ReportRepository $reportRepository
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
-        EngineInterface $templatingEngine,
         ReportRepository $reportRepository,
         EventDispatcherInterface $eventDispatcher
     ) {
-        $this->templatingEngine = $templatingEngine;
         $this->reportRepository = $reportRepository;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -66,7 +57,7 @@ final class ReportsController extends AbstractController
 
         // Form not submitted yet
         if (null === $request->request->get($form->getName()) && null === $request->request->get($formPeriod->getName())) {
-            return $this->templatingEngine->renderResponse('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
+            return $this->render('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
                 'form' => $form->createView(),
                 'form_period' => $formPeriod->createView(),
             ]);
@@ -76,7 +67,7 @@ final class ReportsController extends AbstractController
         if ($request->request->get($form->getName())) {
             $form->submit($request->request->get($form->getName()));
             if (!$form->isSubmitted() || !$form->isValid()) {
-                return $this->templatingEngine->renderResponse('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
+                return $this->render('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
                     'form' => $form->createView(),
                     'form_period' => $formPeriod->createView(),
                 ]);
@@ -87,7 +78,7 @@ final class ReportsController extends AbstractController
         if ($request->request->get($formPeriod->getName())) {
             $formPeriod->submit($request->request->get($formPeriod->getName()));
             if (!$formPeriod->isSubmitted() || !$formPeriod->isValid()) {
-                return $this->templatingEngine->renderResponse('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
+                return $this->render('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
                     'form' => $form->createView(),
                     'form_period' => $formPeriod->createView(),
                 ]);
@@ -124,15 +115,15 @@ final class ReportsController extends AbstractController
             $productOptionValueSalesResult = $this->reportRepository->getProductOptionValueSalesForChannelForDates($channel, $from, $to);
         } catch (InvalidDateException $e) {
             $form->addError(new FormError($e->getMessage()));
-            return $this->templatingEngine->renderResponse('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
+            return $this->render('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
                 'form' => $form->createView(),
             ]);
         }
 
         $event = new CustomReportEvent($channel, $from, $to);
-        $this->eventDispatcher->dispatch(self::APPEND_REPORTS_EVENT, $event);
+        $this->eventDispatcher->dispatch($event);
 
-        return $this->templatingEngine->renderResponse('@MonsieurBizSyliusSalesReportsPlugin/Admin/view.html.twig', [
+        return $this->render('@MonsieurBizSyliusSalesReportsPlugin/Admin/view.html.twig', [
             'form' => $form->createView(),
             'form_period' => $formPeriod->createView(),
             'from' => $from,

@@ -9,3 +9,9 @@
 
 /behat.yml
 /phpspec.yml
+
+/package-lock.json
+
+/.php-version
+/.phpunit.result.cache
+/node_modules

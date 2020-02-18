@@ -21,7 +21,7 @@ A simple plugin to have sales reports in Sylius
 ## Installation
 
 ```bash
-`composer require monsieurbiz/sylius-sales-reports-plugin
+composer require monsieurbiz/sylius-sales-reports-plugin
 ```
 
 Change your `config/bundles.php` file to add the line for the plugin : 

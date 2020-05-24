@@ -26,6 +26,7 @@ class DateType extends AbstractType
             ])
             ->add('channel', ChannelChoiceType::class, [
                 'required' => true,
+                'label' => 'monsieur_biz_sales_reports.form.channel.label',
                 'constraints' => [
                     new Assert\NotBlank([]),
                 ],

@@ -1,0 +1,36 @@
+monsieur_biz_sales_reports:
+  ui:
+    title: 'Verkooprapportage'
+    subtitle: 'Bekijk de verkooprapportage'
+    day_report: 'Dagelijkse rapportage'
+    day_report_for: 'Dagelijkse rapportage voor %date% voor %channel%'
+    period_report: 'Periode rapportage'
+    period_report_for: 'Periode rapportage report voor %date% voor %channel%'
+    global_report: 'Algemene rapportage'
+    average_report: 'Gemiddelde rapportage'
+    number_of_orders: 'Aantal bestellingen:'
+    product_report: 'Product rapportage'
+    product_variant_report: 'Product varianten rapportage'
+    option_report: 'Opties rapportage'
+    option_value_report: 'Optiewaardes rapportage'
+  form:
+    channel:
+        label: 'Kanaal'
+    date:
+      label: 'Specifieke dag'
+    from_date:
+      label: 'Van'
+    to_date:
+      label: 'Tot'
+  view:
+    amount_without_tax: 'Aantallen zonder belasting'
+    promo_amount_without_tax: 'Promotie aantallen zonder belasting'
+    shipping_amount_without_tax: 'Verzonden aantallen zonder belasting'
+    tax_amount: 'Tax amount'
+    total_amount: 'Totaal aantallen met belasting'
+    number_of_orders: 'Aantal bestellingen'
+    product_name: 'Product naam'
+    product_variant_name: 'Product variant naam'
+    no_result: 'Geen resultaat'
+    option_name: 'Optie naam'
+    option_value: 'Optie waarde'

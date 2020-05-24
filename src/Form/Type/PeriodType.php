@@ -34,6 +34,7 @@ class PeriodType extends AbstractType
                 ],
             ])
             ->add('channel', ChannelChoiceType::class, [
+                'label' => 'monsieur_biz_sales_reports.form.channel.label',
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank([]),

@@ -14,6 +14,8 @@ monsieur_biz_sales_reports:
     option_report: 'Option report'
     option_value_report: 'Option value report'
   form:
+    channel:
+        label: 'Channel'
     date:
       label: 'Specific day'
     from_date:

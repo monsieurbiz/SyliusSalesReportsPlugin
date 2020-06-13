@@ -9,7 +9,7 @@ use Doctrine\ORM\QueryBuilder;
 use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Core\Repository\ProductVariantRepositoryInterface;
 
@@ -212,13 +212,13 @@ abstract class AbstractReportRepository
             ->setParameter('order_unit_promotion_type', AdjustmentInterface::ORDER_UNIT_PROMOTION_ADJUSTMENT)
             // Filters on orders in channel, which are paid, not refunded and completed between the wanted dates
             ->andWhere('o.channel = :channel')
-            ->andWhere('o.paymentState != :payment_state')
             ->andWhere('o.state IN (:states)')
+            ->andWhere('o.paymentState IN (:payment_states)')
             ->andWhere('o.checkoutCompletedAt BETWEEN :from AND :to')
             // Filters parameters
             ->setParameter('channel', $channel)
-            ->setParameter('payment_state', PaymentInterface::STATE_REFUNDED)
             ->setParameter('states', [OrderInterface::STATE_FULFILLED, OrderInterface::STATE_NEW])
+            ->setParameter('payment_states', [OrderPaymentStates::STATE_PAID]) // @TODO Take care of OrderPaymentStates::STATE_PARTIALLY_PAID
             ->setParameter('from', $from)
             ->setParameter('to', $to);
     }

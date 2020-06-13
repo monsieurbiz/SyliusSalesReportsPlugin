@@ -212,13 +212,13 @@ abstract class AbstractReportRepository
             ->setParameter('order_unit_promotion_type', AdjustmentInterface::ORDER_UNIT_PROMOTION_ADJUSTMENT)
             // Filters on orders in channel, which are paid, not refunded and completed between the wanted dates
             ->andWhere('o.channel = :channel')
-            ->andWhere('o.state = :state')
             ->andWhere('o.paymentState != :payment_state')
+            ->andWhere('o.state IN (:states)')
             ->andWhere('o.checkoutCompletedAt BETWEEN :from AND :to')
             // Filters parameters
             ->setParameter('channel', $channel)
-            ->setParameter('state', OrderInterface::STATE_FULFILLED)
             ->setParameter('payment_state', PaymentInterface::STATE_REFUNDED)
+            ->setParameter('states', [OrderInterface::STATE_FULFILLED, OrderInterface::STATE_NEW])
             ->setParameter('from', $from)
             ->setParameter('to', $to);
     }

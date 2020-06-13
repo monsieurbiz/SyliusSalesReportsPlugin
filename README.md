@@ -35,18 +35,10 @@ return [
 ];
 ```
 
-Then create the config file in `config/packages/monsieur_biz_sales_reports_plugin.yaml` :
+Finally import the routes in `config/routes/monsieurbiz_sylius_sales_reports_plugin.yaml` : 
 
 ```yaml
-imports:
-  - { resource: "@MonsieurBizSyliusSalesReportsPlugin/Resources/config/config.yaml" }
-``` 
-
-
-Finally import the routes in `config/routes.yaml` : 
-
-```yaml
-monsieur_biz_sales_reports_plugin:
+monsieurbiz_sales_reports_plugin:
     resource: "@MonsieurBizSyliusSalesReportsPlugin/Resources/config/routing.yaml"
 ```
 

@@ -20,8 +20,8 @@ class AdminMenuListener
 
         if ($salesMenu instanceof ItemInterface) {
             $salesMenu
-                ->addChild('monsieur_biz_sales_reports', ['route' => 'monsieur_biz_sylius_sales_reports_admin_index'])
-                ->setLabel('monsieur_biz_sales_reports.ui.title')
+                ->addChild('monsieurbiz.sales_reports', ['route' => 'monsieurbiz_sylius_sales_reports_admin_index'])
+                ->setLabel('monsieurbiz.sales_reports.ui.title')
                 ->setLabelAttribute('icon', 'list alternate')
             ;
         }

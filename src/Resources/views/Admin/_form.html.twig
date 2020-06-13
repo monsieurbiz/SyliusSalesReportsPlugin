@@ -1,8 +1,8 @@
 <div class="ui hidden divider"></div>
 
-{{ form_start(form, {'action': path('monsieur_biz_sylius_sales_reports_admin_view'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
+{{ form_start(form, {'action': path('monsieurbiz_sylius_sales_reports_admin_view'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
 <div class="ui segment">
-    <h2>{{ 'monsieur_biz_sales_reports.ui.day_report'|trans }}</h2>
+    <h2>{{ 'monsieurbiz.sales_reports.ui.day_report'|trans }}</h2>
     {{ form_row(form.date) }}
     {{ form_row(form.channel) }}
     <div class="ui basic segment">

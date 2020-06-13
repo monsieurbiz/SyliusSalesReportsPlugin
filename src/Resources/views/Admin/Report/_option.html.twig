@@ -1,16 +1,16 @@
 {% import "@SyliusAdmin/Common/Macro/money.html.twig" as money %}
 
-<h3>{{ 'monsieur_biz_sales_reports.ui.option_report'|trans }}</h3>
+<h3>{{ 'monsieurbiz.sales_reports.ui.option_report'|trans }}</h3>
 <table class="ui celled table sortable">
     <thead>
     <tr>
-        <th>{{ 'monsieur_biz_sales_reports.view.option_name'|trans }}</th>
-        <th>{{ 'monsieur_biz_sales_reports.view.number_of_orders'|trans }}</th>
-        <th>{{ 'monsieur_biz_sales_reports.view.amount_without_tax' | trans }}</th>
-        <th>{{ 'monsieur_biz_sales_reports.view.promo_amount_without_tax' | trans }}</th>
-        <th>{{ 'monsieur_biz_sales_reports.view.shipping_amount_without_tax' | trans }}</th>
-        <th>{{ 'monsieur_biz_sales_reports.view.tax_amount' | trans }}</th>
-        <th>{{ 'monsieur_biz_sales_reports.view.total_amount' | trans }}</th>
+        <th>{{ 'monsieurbiz.sales_reports.view.option_name'|trans }}</th>
+        <th>{{ 'monsieurbiz.sales_reports.view.number_of_orders'|trans }}</th>
+        <th>{{ 'monsieurbiz.sales_reports.view.amount_without_tax' | trans }}</th>
+        <th>{{ 'monsieurbiz.sales_reports.view.promo_amount_without_tax' | trans }}</th>
+        <th>{{ 'monsieurbiz.sales_reports.view.shipping_amount_without_tax' | trans }}</th>
+        <th>{{ 'monsieurbiz.sales_reports.view.tax_amount' | trans }}</th>
+        <th>{{ 'monsieurbiz.sales_reports.view.total_amount' | trans }}</th>
     </tr>
     </thead>
     <tbody>
@@ -28,7 +28,7 @@
         {% endfor %}
     {% else %}
         <tr>
-            <td>{{ 'monsieur_biz_sales_reports.view.no_result'|trans }}</td>
+            <td>{{ 'monsieurbiz.sales_reports.view.no_result'|trans }}</td>
         </tr>
     {% endif %}
     </tbody>

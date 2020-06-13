@@ -17,7 +17,7 @@ class PeriodType extends AbstractType
         $builder
             ->add('from', SymfonyDateType::class, [
                 'widget' => 'single_text',
-                'label' => 'monsieur_biz_sales_reports.form.from_date.label',
+                'label' => 'monsieurbiz.sales_reports.form.from_date.label',
                 'required' => true,
                 'constraints' => [
                     new Assert\Date([]),
@@ -26,7 +26,7 @@ class PeriodType extends AbstractType
             ])
             ->add('to', SymfonyDateType::class, [
                 'widget' => 'single_text',
-                'label' => 'monsieur_biz_sales_reports.form.to_date.label',
+                'label' => 'monsieurbiz.sales_reports.form.to_date.label',
                 'required' => true,
                 'constraints' => [
                     new Assert\Date([]),
@@ -34,7 +34,7 @@ class PeriodType extends AbstractType
                 ],
             ])
             ->add('channel', ChannelChoiceType::class, [
-                'label' => 'monsieur_biz_sales_reports.form.channel.label',
+                'label' => 'monsieurbiz.sales_reports.form.channel.label',
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank([]),

@@ -22,7 +22,7 @@ services:
     tags: ['controller.service_arguments']
 
   # Add entry in menu
-  monsieur_biz_sales_reports.listener.admin.menu_builder:
+  monsieurbiz.sales_reports.listener.admin.menu_builder:
     class: MonsieurBiz\SyliusSalesReportsPlugin\Menu\AdminMenuListener
     tags:
       - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addAdminMenuItem }

@@ -1,11 +1,11 @@
-monsieur_biz_sylius_sales_reports_admin_index:
-  path: /monsieur_biz/sales_reports/
+monsieurbiz_sylius_sales_reports_admin_index:
+  path: /sales_reports/
   methods: [GET]
   defaults:
     _controller: MonsieurBiz\SyliusSalesReportsPlugin\Controller\Admin\ReportsController:indexAction
 
-monsieur_biz_sylius_sales_reports_admin_view:
-  path: /monsieur_biz/sales_reports/
+monsieurbiz_sylius_sales_reports_admin_view:
+  path: /sales_reports/
   methods: [POST]
   defaults:
     _controller: MonsieurBiz\SyliusSalesReportsPlugin\Controller\Admin\ReportsController:indexAction

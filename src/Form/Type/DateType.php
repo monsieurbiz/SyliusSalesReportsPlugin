@@ -17,7 +17,7 @@ class DateType extends AbstractType
         $builder
             ->add('date', SymfonyDateType::class, [
                 'widget' => 'single_text',
-                'label' => 'monsieur_biz_sales_reports.form.date.label',
+                'label' => 'monsieurbiz.sales_reports.form.date.label',
                 'required' => true,
                 'constraints' => [
                     new Assert\Date([]),
@@ -26,7 +26,7 @@ class DateType extends AbstractType
             ])
             ->add('channel', ChannelChoiceType::class, [
                 'required' => true,
-                'label' => 'monsieur_biz_sales_reports.form.channel.label',
+                'label' => 'monsieurbiz.sales_reports.form.channel.label',
                 'constraints' => [
                     new Assert\NotBlank([]),
                 ],

@@ -33,6 +33,8 @@ final class MonsieurBizSyliusSalesReportsPlugin extends Bundle
                 $this->containerExtension = false;
             }
         }
-        return $this->containerExtension ?: null;
+        return $this->containerExtension instanceof ExtensionInterface
+            ? $this->containerExtension
+            : null;
     }
 }

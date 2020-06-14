@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin\DependencyInjection;
 
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -16,9 +17,12 @@ final class MonsieurBizSyliusSalesReportsExtension extends Extension
 
     public function load(array $configs, ContainerBuilder $container)
     {
-        $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
-        foreach ($config as $name => $value) {
-            $container->setParameter(self::EXTENSION_CONFIG_NAME . '.' . $name, $value);
+        $configuration = $this->getConfiguration([], $container);
+        if ($configuration instanceof ConfigurationInterface) {
+            $config = $this->processConfiguration($configuration, $configs);
+            foreach ($config as $name => $value) {
+                $container->setParameter(self::EXTENSION_CONFIG_NAME . '.' . $name, $value);
+            }
         }
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));

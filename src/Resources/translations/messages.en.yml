@@ -14,6 +14,7 @@ monsieurbiz:
             product_variant_report: 'Product variant report'
             option_report: 'Option report'
             option_value_report: 'Option value report'
+            statistics: 'Statistics'
         form:
             channel:
                 label: 'Channel'

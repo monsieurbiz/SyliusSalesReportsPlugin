@@ -16,10 +16,13 @@ class AdminMenuListener
     {
         $menu = $event->getMenu();
 
-        $salesMenu = $menu->getChild('sales');
+        $statisticsMenu = $menu
+            ->addChild('monsieurbiz.statistics')
+            ->setLabel('monsieurbiz.sales_reports.ui.statistics')
+        ;
 
-        if ($salesMenu instanceof ItemInterface) {
-            $salesMenu
+        if ($statisticsMenu instanceof ItemInterface) {
+            $statisticsMenu
                 ->addChild('monsieurbiz.sales_reports', ['route' => 'monsieurbiz_sylius_sales_reports_admin_index'])
                 ->setLabel('monsieurbiz.sales_reports.ui.title')
                 ->setLabelAttribute('icon', 'list alternate')

@@ -14,6 +14,7 @@ monsieurbiz:
             product_variant_report: 'Synthèse par variante produit'
             option_report: 'Synthèse par option'
             option_value_report: 'Synthèse par valeur d''option'
+            statistics: 'Statistiques'
         form:
             channel:
                 label: 'Canal'

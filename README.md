@@ -36,14 +36,23 @@ return [
     MonsieurBiz\SyliusSalesReportsPlugin\MonsieurBizSyliusSalesReportsPlugin::class => ['all' => true],
 ];
 ```
+<!-- Since SyliusSalesReportsPlugin does not contain a flex methode you have to manually create this file :  -->
 
-Finally import the routes in `config/routes/monsieurbiz_sylius_sales_reports_plugin.yaml` : 
+Create a file in `sylius/config/packages/sylius_sales_reports.yaml` within :
+```yaml
+imports:
+    - { resource: "@MonsieurBizSyliusSalesReportsPlugin/Resources/config/config.yaml" }
+```
+Import the routes in `config/routes/monsieurbiz_sylius_sales_reports_plugin.yaml` : 
 
 ```yaml
 monsieurbiz_sales_reports_plugin:
     resource: "@MonsieurBizSyliusSalesReportsPlugin/Resources/config/routing.yaml"
 ```
-
+And finally run 
+``` bash
+php bin/console cache:clear 
+```
 ## Reports
 
 All reports columns are sortable by clicking on it.

@@ -1,25 +1,34 @@
 <?php
 
+/*
+ * This file is part of Monsieur Biz' Sales Reports plugin for Sylius.
+ *
+ * (c) Monsieur Biz <sylius@monsieurbiz.com>
+ *
+ * For the full copyright and license information, please view the LICENSE.txt
+ * file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin\Controller\Admin;
 
 use MonsieurBiz\SyliusSalesReportsPlugin\Event\CustomReportEvent;
 use MonsieurBiz\SyliusSalesReportsPlugin\Exception\InvalidDateException;
+use MonsieurBiz\SyliusSalesReportsPlugin\Form\Type\DateType;
 use MonsieurBiz\SyliusSalesReportsPlugin\Form\Type\PeriodType;
 use MonsieurBiz\SyliusSalesReportsPlugin\Repository\ReportRepository;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use MonsieurBiz\SyliusSalesReportsPlugin\Form\Type\DateType;
 use Webmozart\Assert\Assert;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class ReportsController extends AbstractController
 {
-    const APPEND_REPORTS_EVENT = 'monsieurbiz.sylius_sales_report.append_reports';
+    public const APPEND_REPORTS_EVENT = 'monsieurbiz.sylius_sales_report.append_reports';
 
     /**
      * @var ReportRepository
@@ -33,8 +42,6 @@ final class ReportsController extends AbstractController
 
     /**
      * ReportsController constructor.
-     * @param ReportRepository $reportRepository
-     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         ReportRepository $reportRepository,
@@ -45,10 +52,7 @@ final class ReportsController extends AbstractController
     }
 
     /**
-     * View the report for a single date
-     *
-     * @param Request $request
-     * @return Response
+     * View the report for a single date.
      */
     public function indexAction(Request $request): Response
     {
@@ -98,7 +102,11 @@ final class ReportsController extends AbstractController
 
         // Reverse date if from date greater than end date
         if ($from > $to) {
-            $tmp = $to; $to = $from; $from = $tmp; $data['from'] = $from; $data['to'] = $to;
+            $tmp = $to;
+            $to = $from;
+            $from = $tmp;
+            $data['from'] = $from;
+            $data['to'] = $to;
         }
 
         Assert::isInstanceOf($channel, ChannelInterface::class);
@@ -115,6 +123,7 @@ final class ReportsController extends AbstractController
             $productOptionValueSalesResult = $this->reportRepository->getProductOptionValueSalesForChannelForDates($channel, $from, $to);
         } catch (InvalidDateException $e) {
             $form->addError(new FormError($e->getMessage()));
+
             return $this->render('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
                 'form' => $form->createView(),
             ]);

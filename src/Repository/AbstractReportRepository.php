@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of Monsieur Biz' Sales Reports plugin for Sylius.
+ *
+ * (c) Monsieur Biz <sylius@monsieurbiz.com>
+ *
+ * For the full copyright and license information, please view the LICENSE.txt
+ * file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin\Repository;
@@ -17,6 +26,7 @@ abstract class AbstractReportRepository
 {
     // Adjustment if Admin Order Creation plugin is installed
     public const ADMIN_ORDER_DISCOUNT_ADJUSTMENT = 'order_discount';
+
     public const ADMIN_ORDER_ITEM_DISCOUNT_ADJUSTMENT = 'order_item_discount';
 
     /**
@@ -30,28 +40,28 @@ abstract class AbstractReportRepository
     protected $productVariantRepository;
 
     /**
-     * Result with totals, one dimensional array
+     * Result with totals, one dimensional array.
      *
      * @var array
      */
     protected $result;
 
     /**
-     * Results with totals by elements, two dimensional array
+     * Results with totals by elements, two dimensional array.
      *
      * @var array
      */
     protected $results;
 
     /**
-     * The elements we want to group, id as key, id or label as value, one dimensional array
+     * The elements we want to group, id as key, id or label as value, one dimensional array.
      *
      * @var array
      */
     protected $elements;
 
     /**
-     * An array of elements we want to group, two dimensional array
+     * An array of elements we want to group, two dimensional array.
      *
      * @var array
      */
@@ -59,8 +69,6 @@ abstract class AbstractReportRepository
 
     /**
      * ReportRepository constructor.
-     * @param OrderRepositoryInterface $orderRepository
-     * @param ProductVariantRepositoryInterface $productVariantRepository
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
@@ -71,12 +79,7 @@ abstract class AbstractReportRepository
     }
 
     /**
-     * Generate results for order item units
-     *
-     * @param ChannelInterface $channel
-     * @param \DateTimeInterface $from
-     * @param \DateTimeInterface $to
-     * @return array
+     * Generate results for order item units.
      */
     protected function getOrderItemUnitValues(
         ChannelInterface $channel,
@@ -87,18 +90,15 @@ abstract class AbstractReportRepository
             ->select($this->getSelectColumns(true, false, false))
             ->leftJoin('o.items', 'item')
             ->leftJoin('item.variant', 'variant')
-            ->leftJoin('item.units', 'element');
+            ->leftJoin('item.units', 'element')
+        ;
         $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $from, $to);
+
         return $queryBuilder->getQuery()->getArrayResult();
     }
 
     /**
-     * Generate results for order items
-     *
-     * @param ChannelInterface $channel
-     * @param \DateTimeInterface $from
-     * @param \DateTimeInterface $to
-     * @return array
+     * Generate results for order items.
      */
     protected function getOrderItemValues(
         ChannelInterface $channel,
@@ -108,18 +108,15 @@ abstract class AbstractReportRepository
         $queryBuilder = $this->createOrderQuery()
             ->select($this->getSelectColumns(false, true, false))
             ->leftJoin('o.items', 'element')
-            ->leftJoin('element.variant', 'variant');
+            ->leftJoin('element.variant', 'variant')
+        ;
         $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $from, $to);
+
         return $queryBuilder->getQuery()->getArrayResult();
     }
 
     /**
-     * Generate results for orders
-     *
-     * @param ChannelInterface $channel
-     * @param \DateTimeInterface $from
-     * @param \DateTimeInterface $to
-     * @return array
+     * Generate results for orders.
      */
     protected function getOrderValues(
         ChannelInterface $channel,
@@ -128,6 +125,7 @@ abstract class AbstractReportRepository
     ): array {
         $queryBuilder = $this->createOrderQuery()->select($this->getSelectColumns(false, false, true));
         $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $from, $to, true);
+
         return $queryBuilder->getQuery()->getArrayResult();
     }
 
@@ -136,12 +134,7 @@ abstract class AbstractReportRepository
      * Column order_id is used to generate average report
      * Column without_tax is for unit price without tax in item units
      * Columns without_tax_promo, without_tax_shipping, tax columns are respectively for promotions, shipping, tax amounts
-     * Columns item and total are respectively for total for items total for orders (With shipping etc.)
-     *
-     * @param bool $isItemUnit
-     * @param bool $isItem
-     * @param bool $isOrder
-     * @return string
+     * Columns item and total are respectively for total for items total for orders (With shipping etc.).
      */
     protected function getSelectColumns(bool $isItemUnit = false, bool $isItem = false, bool $isOrder = false): string
     {
@@ -166,18 +159,13 @@ abstract class AbstractReportRepository
 
             // Totals
             $isOrder ? 'o.total as total' : '0 as total',
-            $isItem ? 'element.total as item_row' : '0 as item_row'
+            $isItem ? 'element.total as item_row' : '0 as item_row',
         ]);
     }
 
     /**
-     * Make joins with all adjustments, add conditions and set parameters to query
+     * Make joins with all adjustments, add conditions and set parameters to query.
      *
-     * @param QueryBuilder $queryBuilder
-     * @param ChannelInterface $channel
-     * @param \DateTimeInterface $from
-     * @param \DateTimeInterface $to
-     * @param bool $isOrder
      * @return mixed
      */
     protected function appendAdjustmentsAndParameters(
@@ -188,6 +176,7 @@ abstract class AbstractReportRepository
         bool $isOrder = false
     ) {
         $elementAlias = $isOrder ? 'o' : 'element';
+
         return $queryBuilder
             // Adjustments joins
             ->leftJoin($elementAlias . '.adjustments', 'tax_adjustment', 'WITH', 'tax_adjustment.type = :tax_type')
@@ -220,14 +209,12 @@ abstract class AbstractReportRepository
             ->setParameter('states', [OrderInterface::STATE_FULFILLED, OrderInterface::STATE_NEW])
             ->setParameter('payment_states', [OrderPaymentStates::STATE_PAID]) // @TODO Take care of OrderPaymentStates::STATE_PARTIALLY_PAID
             ->setParameter('from', $from)
-            ->setParameter('to', $to);
+            ->setParameter('to', $to)
+        ;
     }
 
     /**
-     * Populate result array with options and option values data
-     *
-     * @param string $localeCode
-     * @return array
+     * Populate result array with options and option values data.
      */
     protected function populateOptions(string $localeCode): array
     {
@@ -258,10 +245,7 @@ abstract class AbstractReportRepository
     }
 
     /**
-     * Retrieve options for all variants and build an array
-     *
-     * @param string $localeCode
-     * @return array
+     * Retrieve options for all variants and build an array.
      */
     protected function getVariantsOptions(string $localeCode): array
     {
@@ -272,7 +256,8 @@ abstract class AbstractReportRepository
                 'option_value_translation.locale = :locale')
             ->leftJoin('option_value.option', 'option')
             ->leftJoin('option.translations', 'option_translation', 'WITH', 'option_translation.locale = :locale')
-            ->setParameter('locale', $localeCode);
+            ->setParameter('locale', $localeCode)
+        ;
 
         $variantOptionsValues = [];
 
@@ -289,9 +274,9 @@ abstract class AbstractReportRepository
     }
 
     /**
-     * Init the result with 0 totals
+     * Init the result with 0 totals.
      */
-    protected function initResult()
+    protected function initResult(): void
     {
         $this->result = [
             'without_tax_total' => 0,
@@ -305,17 +290,14 @@ abstract class AbstractReportRepository
     }
 
     /**
-     * Increment results with given array
-     *
-     * @param array $elementResults
-     * @param string|null $groupField
+     * Increment results with given array.
      */
     protected function addResults(array $elementResults, ?string $groupField = null): void
     {
         // Loop on given elements to increments current result
         foreach ($elementResults as $elementResult) {
             foreach ($this->result as $key => $val) {
-                if (strpos($key, 'total') !== false) {
+                if (false !== strpos($key, 'total')) {
                     // Get the field key, for example `without_tax_shipping` if we need to increment `without_tax_shipping_total`
                     $resultKey = str_replace('_total', '', $key);
                     if (isset($elementResult[$resultKey])) {
@@ -324,19 +306,14 @@ abstract class AbstractReportRepository
                 }
             }
             // Add group field value if we got one, for example, an order ID to have an average per order or a list per product variant
-            if ($groupField !== null) {
+            if (null !== $groupField) {
                 $this->elements[$elementResult[$groupField]] = $elementResult[$groupField];
             }
         }
     }
 
     /**
-     * Make the sum of results by elements
-     *
-     * @param array $elementResults
-     * @param string $groupField
-     * @param string|null $labelField
-     * @param array|null $extraFields
+     * Make the sum of results by elements.
      */
     protected function addResultsByElement(
         array $elementResults,
@@ -382,21 +359,21 @@ abstract class AbstractReportRepository
 
         // Aggregate number of order per element
         foreach ($this->results as $key => $value) {
-            $this->results[$key]['number_of_elements'] = count($this->elementsArray[$key]);
+            $this->results[$key]['number_of_elements'] = \count($this->elementsArray[$key]);
         }
     }
 
     /**
-     * Make the average of results depending on number of elements
+     * Make the average of results depending on number of elements.
      */
     protected function averageResult(): void
     {
         if (!empty($this->elements)) {
-            $numberOfElements = count($this->elements);
+            $numberOfElements = \count($this->elements);
             foreach ($this->result as $key => $val) {
                 $this->result[$key] = round($this->result[$key] / $numberOfElements);
             }
-            $this->result['number_of_elements'] = count($this->elements);
+            $this->result['number_of_elements'] = \count($this->elements);
         } else {
             $this->result['number_of_elements'] = 0;
         }
@@ -409,6 +386,7 @@ abstract class AbstractReportRepository
     {
         /** @var EntityRepository $repository */
         $repository = $this->orderRepository;
+
         return $repository->createQueryBuilder('o');
     }
 
@@ -419,6 +397,7 @@ abstract class AbstractReportRepository
     {
         /** @var EntityRepository $repository */
         $repository = $this->productVariantRepository;
+
         return $repository->createQueryBuilder('v');
     }
 }

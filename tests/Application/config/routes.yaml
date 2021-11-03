@@ -1,2 +1,0 @@
-monsieurbiz_sales_reports_plugin:
-  resource: "@MonsieurBizSyliusSalesReportsPlugin/Resources/config/routing.yaml"

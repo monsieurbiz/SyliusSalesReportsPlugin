@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin\Event;
 
-use MonsieurBiz\SyliusSalesReportsPlugin\Exception\AlreadyExistsReport;
-use MonsieurBiz\SyliusSalesReportsPlugin\Exception\NotExistsReport;
+use Symfony\Contracts\EventDispatcher\Event;
 use Sylius\Component\Core\Model\ChannelInterface;
-use Symfony\Component\EventDispatcher\Event;
+use MonsieurBiz\SyliusSalesReportsPlugin\Exception\NotExistsReport;
+use MonsieurBiz\SyliusSalesReportsPlugin\Exception\AlreadyExistsReport;
 
 final class CustomReportEvent extends Event
 {

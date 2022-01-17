@@ -20,7 +20,7 @@ class PeriodType extends AbstractType
                 'label' => 'monsieurbiz.sales_reports.form.from_date.label',
                 'required' => true,
                 'constraints' => [
-                    new Assert\Date([]),
+                    new Assert\Type("\DateTimeInterface"),
                     new Assert\NotBlank([]),
                 ],
             ])
@@ -29,7 +29,7 @@ class PeriodType extends AbstractType
                 'label' => 'monsieurbiz.sales_reports.form.to_date.label',
                 'required' => true,
                 'constraints' => [
-                    new Assert\Date([]),
+                    new Assert\Type("\DateTimeInterface"),
                     new Assert\NotBlank([]),
                 ],
             ])

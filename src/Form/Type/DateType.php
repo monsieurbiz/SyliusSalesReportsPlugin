@@ -29,7 +29,6 @@ class DateType extends AbstractType
                 'label' => 'monsieurbiz.sales_reports.form.date.label',
                 'required' => true,
                 'constraints' => [
-                    new Assert\Date([]),
                     new Assert\NotBlank([]),
                 ],
             ])

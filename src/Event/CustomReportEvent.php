@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of Monsieur Biz' Sales Reports plugin for Sylius.
+ *
+ * (c) Monsieur Biz <sylius@monsieurbiz.com>
+ *
+ * For the full copyright and license information, please view the LICENSE.txt
+ * file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin\Event;
@@ -42,9 +51,7 @@ final class CustomReportEvent extends Event
     }
 
     /**
-     * Retrieve custom reports, use a template override to display it
-     *
-     * @return array
+     * Retrieve custom reports, use a template override to display it.
      */
     public function getCustomReports(): array
     {
@@ -52,13 +59,11 @@ final class CustomReportEvent extends Event
     }
 
     /**
-     * Add a new custom report, you can't have reports with the same key
+     * Add a new custom report, you can't have reports with the same key.
      *
-     * @param string $key
-     * @param array $data
      * @throws AlreadyExistsReport
      */
-    public function addReport(string $key, array $data)
+    public function addReport(string $key, array $data): void
     {
         if (isset($this->customReports[$key])) {
             throw new AlreadyExistsReport(sprintf('Report "%s" already exists', $key));
@@ -67,12 +72,11 @@ final class CustomReportEvent extends Event
     }
 
     /**
-     * Remove a custom report, you cannot remove a key which not exists
+     * Remove a custom report, you cannot remove a key which not exists.
      *
-     * @param string $key
      * @throws NotExistsReport
      */
-    public function removeReport(string $key)
+    public function removeReport(string $key): void
     {
         if (!isset($this->customReports[$key])) {
             throw new NotExistsReport(sprintf('Report "%s" does not exist', $key));
@@ -80,25 +84,16 @@ final class CustomReportEvent extends Event
         unset($this->customReports[$key]);
     }
 
-    /**
-     * @return ChannelInterface
-     */
     public function getChannel(): ChannelInterface
     {
         return $this->channel;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
     public function getFromDate(): \DateTimeInterface
     {
         return $this->fromDate;
     }
 
-    /**
-     * @return \DateTimeInterface|null
-     */
     public function getToDate(): ?\DateTimeInterface
     {
         return $this->toDate;

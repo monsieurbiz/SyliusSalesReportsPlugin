@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of Monsieur Biz' Sales Reports plugin for Sylius.
+ *
+ * (c) Monsieur Biz <sylius@monsieurbiz.com>
+ *
+ * For the full copyright and license information, please view the LICENSE.txt
+ * file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin\Repository;
@@ -11,13 +20,8 @@ use Sylius\Component\Core\Model\ChannelInterface;
 class ReportRepository extends AbstractReportRepository
 {
     /**
-     * Get total sales for channel between 2 date times, or average sales from a given field
+     * Get total sales for channel between 2 date times, or average sales from a given field.
      *
-     * @param ChannelInterface $channel
-     * @param \DateTimeInterface $from
-     * @param \DateTimeInterface|null $to
-     * @param string|null $groupField
-     * @return array
      * @throws InvalidDateException
      */
     public function getSalesForChannelForDates(
@@ -27,9 +31,10 @@ class ReportRepository extends AbstractReportRepository
         ?string $groupField = null
     ): array {
         $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
+
         try {
-            $from = new \DateTime($from->format("Y-m-d") . " 00:00:00");
-            $to = new \DateTime($to->format("Y-m-d") . " 23:59:59");
+            $from = new \DateTime($from->format('Y-m-d') . ' 00:00:00');
+            $to = new \DateTime($to->format('Y-m-d') . ' 23:59:59');
         } catch (\Exception $e) {
             throw new InvalidDateException('Invalid date given to report.');
         }
@@ -49,14 +54,9 @@ class ReportRepository extends AbstractReportRepository
         return $this->result;
     }
 
-
     /**
-     * Get average sales for channel between 2 date times
+     * Get average sales for channel between 2 date times.
      *
-     * @param ChannelInterface $channel
-     * @param \DateTimeInterface $from
-     * @param \DateTimeInterface|null $to
-     * @return array
      * @throws InvalidDateException
      */
     public function getAverageSalesForChannelForDates(
@@ -68,12 +68,8 @@ class ReportRepository extends AbstractReportRepository
     }
 
     /**
-     * Get sales per product variant for channel between 2 date times
+     * Get sales per product variant for channel between 2 date times.
      *
-     * @param ChannelInterface $channel
-     * @param \DateTimeInterface $from
-     * @param \DateTimeInterface|null $to
-     * @return array
      * @throws InvalidDateException
      */
     public function getProductVariantSalesForChannelForDates(
@@ -82,9 +78,10 @@ class ReportRepository extends AbstractReportRepository
         ?\DateTimeInterface $to = null
     ): array {
         $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
+
         try {
-            $from = new \DateTime($from->format("Y-m-d") . " 00:00:00");
-            $to = new \DateTime($to->format("Y-m-d") . " 23:59:59");
+            $from = new \DateTime($from->format('Y-m-d') . ' 00:00:00');
+            $to = new \DateTime($to->format('Y-m-d') . ' 23:59:59');
         } catch (\Exception $e) {
             throw new InvalidDateException('Invalid date given to report.');
         }
@@ -104,12 +101,8 @@ class ReportRepository extends AbstractReportRepository
     }
 
     /**
-     * Get sales per product option for channel between 2 date times
+     * Get sales per product option for channel between 2 date times.
      *
-     * @param ChannelInterface $channel
-     * @param \DateTimeInterface $from
-     * @param \DateTimeInterface|null $to
-     * @return array
      * @throws InvalidDateException
      * @throws MissingLocaleException
      */
@@ -119,9 +112,10 @@ class ReportRepository extends AbstractReportRepository
         ?\DateTimeInterface $to = null
     ): array {
         $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
+
         try {
-            $from = new \DateTime($from->format("Y-m-d") . " 00:00:00");
-            $to = new \DateTime($to->format("Y-m-d") . " 23:59:59");
+            $from = new \DateTime($from->format('Y-m-d') . ' 00:00:00');
+            $to = new \DateTime($to->format('Y-m-d') . ' 23:59:59');
         } catch (\Exception $e) {
             throw new InvalidDateException('Invalid date given to report.');
         }
@@ -152,12 +146,8 @@ class ReportRepository extends AbstractReportRepository
     }
 
     /**
-     * Get sales per product option for channel between 2 date times
+     * Get sales per product option for channel between 2 date times.
      *
-     * @param ChannelInterface $channel
-     * @param \DateTimeInterface $from
-     * @param \DateTimeInterface|null $to
-     * @return array
      * @throws InvalidDateException
      * @throws MissingLocaleException
      */
@@ -167,9 +157,10 @@ class ReportRepository extends AbstractReportRepository
         ?\DateTimeInterface $to = null
     ): array {
         $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
+
         try {
-            $from = new \DateTime($from->format("Y-m-d") . " 00:00:00");
-            $to = new \DateTime($to->format("Y-m-d") . " 23:59:59");
+            $from = new \DateTime($from->format('Y-m-d') . ' 00:00:00');
+            $to = new \DateTime($to->format('Y-m-d') . ' 23:59:59');
         } catch (\Exception $e) {
             throw new InvalidDateException('Invalid date given to report.');
         }
@@ -201,12 +192,8 @@ class ReportRepository extends AbstractReportRepository
     }
 
     /**
-     * Get sales per product for channel between 2 date times
+     * Get sales per product for channel between 2 date times.
      *
-     * @param ChannelInterface $channel
-     * @param \DateTimeInterface $from
-     * @param \DateTimeInterface|null $to
-     * @return array
      * @throws InvalidDateException
      */
     public function getProductSalesForChannelForDates(
@@ -215,9 +202,10 @@ class ReportRepository extends AbstractReportRepository
         ?\DateTimeInterface $to = null
     ): array {
         $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
+
         try {
-            $from = new \DateTime($from->format("Y-m-d") . " 00:00:00");
-            $to = new \DateTime($to->format("Y-m-d") . " 23:59:59");
+            $from = new \DateTime($from->format('Y-m-d') . ' 00:00:00');
+            $to = new \DateTime($to->format('Y-m-d') . ' 23:59:59');
         } catch (\Exception $e) {
             throw new InvalidDateException('Invalid date given to report.');
         }

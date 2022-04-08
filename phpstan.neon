@@ -7,10 +7,12 @@ parameters:
     paths:
         - %rootDir%/src/
 
+    checkMissingIterableValueType: false
+
     excludes_analyse:
         # Makes PHPStan crash
         - 'src/DependencyInjection/Configuration.php'
+        - 'src/DependencyInjection/MonsieurBizSyliusSalesReportsExtension.php'
 
         # Test dependencies
-        - 'tests/Application/app/**.php'
-        - 'tests/Application/src/**.php'
+        - 'tests/Application/**/*'

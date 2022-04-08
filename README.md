@@ -12,9 +12,9 @@
 
 <h1 align="center">Sales Reports</h1>
 
-[![Sales Reports Plugin license](https://img.shields.io/github/license/monsieurbiz/SyliusSalesReportsPlugin)](https://github.com/monsieurbiz/SyliusSalesReportsPlugin/blob/master/LICENSE.txt)
-[![Build Status](https://travis-ci.com/monsieurbiz/SyliusSalesReportsPlugin.svg?branch=master)](https://travis-ci.com/monsieurbiz/SyliusSalesReportsPlugin)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/monsieurbiz/SyliusSalesReportsPlugin/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/monsieurbiz/SyliusSalesReportsPlugin/?branch=master)
+[![Sales Reports Plugin license](https://img.shields.io/github/license/monsieurbiz/SyliusSalesReportsPlugin?public)](https://github.com/monsieurbiz/SyliusSalesReportsPlugin/blob/master/LICENSE.txt)
+[![Tests Status](https://img.shields.io/github/workflow/status/monsieurbiz/SyliusSalesReportsPlugin/Tests?logo=github)](https://github.com/monsieurbiz/SyliusSalesReportsPlugin/actions?query=workflow%3ATests)
+[![Security Status](https://img.shields.io/github/workflow/status/monsieurbiz/SyliusSalesReportsPlugin/Security?label=security&logo=github)](https://github.com/monsieurbiz/SyliusSalesReportsPlugin/actions?query=workflow%3ASecurity)
 
 A simple plugin to have sales reports in Sylius
 

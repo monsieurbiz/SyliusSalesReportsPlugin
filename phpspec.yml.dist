@@ -1,4 +1,6 @@
 suites:
     main:
-        namespace: Monsieurbiz\SyliusSalesReportsPlugin
-        psr4_prefix: Monsieurbiz\SyliusSalesReportsPlugin
+        namespace: MonsieurBiz\SyliusSalesReportsPlugin
+        psr4_prefix: MonsieurBiz\SyliusSalesReportsPlugin
+        src_path: src
+        spec_path: tests

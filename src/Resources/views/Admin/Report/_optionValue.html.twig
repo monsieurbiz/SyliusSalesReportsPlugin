@@ -9,7 +9,6 @@
         <th>{{ 'monsieurbiz.sales_reports.view.number_of_orders'|trans }}</th>
         <th>{{ 'monsieurbiz.sales_reports.view.amount_without_tax' | trans }}</th>
         <th>{{ 'monsieurbiz.sales_reports.view.promo_amount_without_tax' | trans }}</th>
-        <th>{{ 'monsieurbiz.sales_reports.view.shipping_amount_without_tax' | trans }}</th>
         <th>{{ 'monsieurbiz.sales_reports.view.tax_amount' | trans }}</th>
         <th>{{ 'monsieurbiz.sales_reports.view.total_amount' | trans }}</th>
     </tr>
@@ -23,7 +22,6 @@
                 <td>{{ result.number_of_elements }}</td>
                 <td>{{ money.format(result.without_tax_total, channel.baseCurrency.code) }}</td>
                 <td>{{ money.format(result.without_tax_promo_total, channel.baseCurrency.code) }}</td>
-                <td>{{ money.format(result.without_tax_shipping_total, channel.baseCurrency.code) }}</td>
                 <td>{{ money.format(result.tax_total, channel.baseCurrency.code) }}</td>
                 <td>{{ money.format(result.item_row_total, channel.baseCurrency.code) }}</td>
             </tr>

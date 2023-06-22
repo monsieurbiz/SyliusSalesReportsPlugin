@@ -1,5 +1,12 @@
 {% import "@SyliusAdmin/Common/Macro/money.html.twig" as money %}
 
+{% set number_of_elements_sum = 0 %}
+{% set without_tax_total_sum = 0 %}
+{% set without_tax_promo_total_sum = 0 %}
+{% set without_tax_shipping_total_sum = 0 %}
+{% set tax_total_sum = 0 %}
+{% set item_row_total_sum = 0 %}
+
 <h3>{{ 'monsieurbiz.sales_reports.ui.option_value_report'|trans }}</h3>
 <table class="ui celled table sortable">
     <thead>
@@ -9,7 +16,6 @@
         <th>{{ 'monsieurbiz.sales_reports.view.number_of_orders'|trans }}</th>
         <th>{{ 'monsieurbiz.sales_reports.view.amount_without_tax' | trans }}</th>
         <th>{{ 'monsieurbiz.sales_reports.view.promo_amount_without_tax' | trans }}</th>
-        <th>{{ 'monsieurbiz.sales_reports.view.shipping_amount_without_tax' | trans }}</th>
         <th>{{ 'monsieurbiz.sales_reports.view.tax_amount' | trans }}</th>
         <th>{{ 'monsieurbiz.sales_reports.view.total_amount' | trans }}</th>
     </tr>
@@ -17,13 +23,18 @@
     <tbody>
     {%  if product_option_value_sales_result|length > 0 %}
         {% for result in product_option_value_sales_result %}
+            {% set number_of_elements_sum = number_of_elements_sum + result.number_of_elements %}
+            {% set without_tax_total_sum = without_tax_total_sum + result.without_tax_total %}
+            {% set without_tax_promo_total_sum = without_tax_promo_total_sum + result.without_tax_promo_total %}
+            {% set without_tax_shipping_total_sum = without_tax_shipping_total_sum + result.without_tax_shipping_total %}
+            {% set tax_total_sum = tax_total_sum + result.tax_total %}
+            {% set item_row_total_sum = item_row_total_sum + result.item_row_total %}
             <tr>
                 <td>{{ result.option_label }}</td>
                 <td>{{ result.option_value_label }}</td>
                 <td>{{ result.number_of_elements }}</td>
                 <td>{{ money.format(result.without_tax_total, channel.baseCurrency.code) }}</td>
                 <td>{{ money.format(result.without_tax_promo_total, channel.baseCurrency.code) }}</td>
-                <td>{{ money.format(result.without_tax_shipping_total, channel.baseCurrency.code) }}</td>
                 <td>{{ money.format(result.tax_total, channel.baseCurrency.code) }}</td>
                 <td>{{ money.format(result.item_row_total, channel.baseCurrency.code) }}</td>
             </tr>
@@ -34,4 +45,16 @@
         </tr>
     {% endif %}
     </tbody>
+    {%  if product_option_value_sales_result|length > 0 %}
+        <tfoot>
+            <tr>
+                <th colspan="2">{{ 'monsieurbiz.sales_reports.view.total'|trans }}</th>
+                <th>{{ number_of_elements_sum }}</th>
+                <th>{{ money.format(without_tax_total_sum, channel.baseCurrency.code) }}</th>
+                <th>{{ money.format(without_tax_promo_total_sum, channel.baseCurrency.code) }}</th>
+                <th>{{ money.format(tax_total_sum, channel.baseCurrency.code) }}</th>
+                <th>{{ money.format(item_row_total_sum, channel.baseCurrency.code) }}</th>
+            </tr>
+        </tfoot>
+    {% endif %}
 </table>

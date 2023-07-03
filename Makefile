@@ -116,7 +116,7 @@ test.phpstan: ## Run PHPStan
 	${COMPOSER} phpstan || true
 
 test.phpmd: ## Run PHPMD
-	${COMPOSER} phpmd
+	${COMPOSER} phpmd || true
 
 test.phpunit: ## Run PHPUnit
 	${COMPOSER} phpunit

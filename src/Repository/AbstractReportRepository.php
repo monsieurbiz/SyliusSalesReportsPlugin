@@ -151,7 +151,7 @@ abstract class AbstractReportRepository
             ($isItemUnit ? 'CONCAT(item.productName, \' \' ,item.variantName) as variant_name' : ($isItem ? 'CONCAT(element.productName, \' \' , element.variantName) as variant_name' : '\'\' as variant_name')),
 
             // Adjustments
-            $isItemUnit ? 'item.unitPrice - COALESCE(tax_adjustment.amount, 0) as without_tax' : '0 as without_tax',
+            $isItemUnit ? 'item.unitPrice - (CASE WHEN tax_adjustment.neutral = 1 THEN tax_adjustment.amount ELSE 0 END) as without_tax' : '0 as without_tax',
             // Only retrieve without_tax price for item units
             '(COALESCE(order_promotion_adjustment.amount, 0) + COALESCE(order_item_promotion_adjustment.amount, 0) + COALESCE(order_shipping_promotion_adjustment.amount, 0) + COALESCE(order_unit_promotion_adjustment.amount, 0)) AS without_tax_promo',
             'shipping_adjustment.amount as without_tax_shipping',

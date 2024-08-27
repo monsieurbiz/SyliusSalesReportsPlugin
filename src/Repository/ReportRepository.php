@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin\Repository;
 
+use DateTime;
+use DateTimeInterface;
+use Exception;
 use MonsieurBiz\SyliusSalesReportsPlugin\Exception\InvalidDateException;
 use MonsieurBiz\SyliusSalesReportsPlugin\Exception\MissingLocaleException;
 use Sylius\Component\Core\Model\ChannelInterface;
@@ -26,27 +29,27 @@ class ReportRepository extends AbstractReportRepository
      */
     public function getSalesForChannelForDates(
         ChannelInterface $channel,
-        \DateTimeInterface $from,
-        ?\DateTimeInterface $to = null,
+        DateTimeInterface $fromDate,
+        ?DateTimeInterface $toDate = null,
         ?string $groupField = null
     ): array {
-        $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
+        $toDate = $toDate ?? $fromDate; // If to is null, take the same day as from to make report on one day
 
         try {
-            $from = new \DateTime($from->format('Y-m-d') . ' 00:00:00');
-            $to = new \DateTime($to->format('Y-m-d') . ' 23:59:59');
-        } catch (\Exception $e) {
+            $fromDate = new DateTime($fromDate->format('Y-m-d') . ' 00:00:00');
+            $toDate = new DateTime($toDate->format('Y-m-d') . ' 23:59:59');
+        } catch (Exception $e) {
             throw new InvalidDateException('Invalid date given to report.');
         }
 
         $this->initResult();
 
         // Order Item Units values
-        $this->addResults($this->getOrderItemUnitValues($channel, $from, $to), $groupField);
+        $this->addResults($this->getOrderItemUnitValues($channel, $fromDate, $toDate), $groupField);
         // Order Items values
-        $this->addResults($this->getOrderItemValues($channel, $from, $to), $groupField);
+        $this->addResults($this->getOrderItemValues($channel, $fromDate, $toDate), $groupField);
         // Order values
-        $this->addResults($this->getOrderValues($channel, $from, $to), $groupField);
+        $this->addResults($this->getOrderValues($channel, $fromDate, $toDate), $groupField);
 
         // Divide results by number of elements if needed
         $this->averageResult();
@@ -61,10 +64,10 @@ class ReportRepository extends AbstractReportRepository
      */
     public function getAverageSalesForChannelForDates(
         ChannelInterface $channel,
-        \DateTimeInterface $from,
-        ?\DateTimeInterface $to = null
+        DateTimeInterface $fromDate,
+        ?DateTimeInterface $toDate = null
     ): array {
-        return $this->getSalesForChannelForDates($channel, $from, $to, 'order_id');
+        return $this->getSalesForChannelForDates($channel, $fromDate, $toDate, 'order_id');
     }
 
     /**
@@ -74,15 +77,15 @@ class ReportRepository extends AbstractReportRepository
      */
     public function getProductVariantSalesForChannelForDates(
         ChannelInterface $channel,
-        \DateTimeInterface $from,
-        ?\DateTimeInterface $to = null
+        DateTimeInterface $fromDate,
+        ?DateTimeInterface $toDate = null
     ): array {
-        $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
+        $toDate = $toDate ?? $fromDate; // If to is null, take the same day as from to make report on one day
 
         try {
-            $from = new \DateTime($from->format('Y-m-d') . ' 00:00:00');
-            $to = new \DateTime($to->format('Y-m-d') . ' 23:59:59');
-        } catch (\Exception $e) {
+            $fromDate = new DateTime($fromDate->format('Y-m-d') . ' 00:00:00');
+            $toDate = new DateTime($toDate->format('Y-m-d') . ' 23:59:59');
+        } catch (Exception $e) {
             throw new InvalidDateException('Invalid date given to report.');
         }
 
@@ -90,11 +93,15 @@ class ReportRepository extends AbstractReportRepository
 
         // Order Item Units values
         $this->addResultsByElement(
-            $this->getOrderItemUnitValues($channel, $from, $to), 'variant_id', 'variant_name'
+            $this->getOrderItemUnitValues($channel, $fromDate, $toDate),
+            'variant_id',
+            'variant_name'
         );
         // Order Items values
         $this->addResultsByElement(
-            $this->getOrderItemValues($channel, $from, $to), 'variant_id', 'variant_name'
+            $this->getOrderItemValues($channel, $fromDate, $toDate),
+            'variant_id',
+            'variant_name'
         );
 
         return $this->results;
@@ -108,15 +115,15 @@ class ReportRepository extends AbstractReportRepository
      */
     public function getProductOptionSalesForChannelForDates(
         ChannelInterface $channel,
-        \DateTimeInterface $from,
-        ?\DateTimeInterface $to = null
+        DateTimeInterface $fromDate,
+        ?DateTimeInterface $toDate = null
     ): array {
-        $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
+        $toDate = $toDate ?? $fromDate; // If to is null, take the same day as from to make report on one day
 
         try {
-            $from = new \DateTime($from->format('Y-m-d') . ' 00:00:00');
-            $to = new \DateTime($to->format('Y-m-d') . ' 23:59:59');
-        } catch (\Exception $e) {
+            $fromDate = new DateTime($fromDate->format('Y-m-d') . ' 00:00:00');
+            $toDate = new DateTime($toDate->format('Y-m-d') . ' 23:59:59');
+        } catch (Exception $e) {
             throw new InvalidDateException('Invalid date given to report.');
         }
 
@@ -124,11 +131,15 @@ class ReportRepository extends AbstractReportRepository
 
         // Order Item Units values
         $this->addResultsByElement(
-            $this->getOrderItemUnitValues($channel, $from, $to), 'variant_id', 'variant_name'
+            $this->getOrderItemUnitValues($channel, $fromDate, $toDate),
+            'variant_id',
+            'variant_name'
         );
         // Order Items values
         $this->addResultsByElement(
-            $this->getOrderItemValues($channel, $from, $to), 'variant_id', 'variant_name'
+            $this->getOrderItemValues($channel, $fromDate, $toDate),
+            'variant_id',
+            'variant_name'
         );
 
         // Populate array with options values data
@@ -153,15 +164,15 @@ class ReportRepository extends AbstractReportRepository
      */
     public function getProductOptionValueSalesForChannelForDates(
         ChannelInterface $channel,
-        \DateTimeInterface $from,
-        ?\DateTimeInterface $to = null
+        DateTimeInterface $fromDate,
+        ?DateTimeInterface $toDate = null
     ): array {
-        $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
+        $toDate = $toDate ?? $fromDate; // If to is null, take the same day as from to make report on one day
 
         try {
-            $from = new \DateTime($from->format('Y-m-d') . ' 00:00:00');
-            $to = new \DateTime($to->format('Y-m-d') . ' 23:59:59');
-        } catch (\Exception $e) {
+            $fromDate = new DateTime($fromDate->format('Y-m-d') . ' 00:00:00');
+            $toDate = new DateTime($toDate->format('Y-m-d') . ' 23:59:59');
+        } catch (Exception $e) {
             throw new InvalidDateException('Invalid date given to report.');
         }
 
@@ -169,11 +180,15 @@ class ReportRepository extends AbstractReportRepository
 
         // Order Item Units values
         $this->addResultsByElement(
-            $this->getOrderItemUnitValues($channel, $from, $to), 'variant_id', 'variant_name'
+            $this->getOrderItemUnitValues($channel, $fromDate, $toDate),
+            'variant_id',
+            'variant_name'
         );
         // Order Items values
         $this->addResultsByElement(
-            $this->getOrderItemValues($channel, $from, $to), 'variant_id', 'variant_name'
+            $this->getOrderItemValues($channel, $fromDate, $toDate),
+            'variant_id',
+            'variant_name'
         );
 
         // Populate array with options values data
@@ -185,8 +200,12 @@ class ReportRepository extends AbstractReportRepository
         // Reinit results to generate a new one
         $this->results = [];
 
-        $this->addResultsByElement($resultsWithOptions, 'option_value_code', 'option_value_label',
-            ['option_code', 'option_label']);
+        $this->addResultsByElement(
+            $resultsWithOptions,
+            'option_value_code',
+            'option_value_label',
+            ['option_code', 'option_label']
+        );
 
         return $this->results;
     }
@@ -198,15 +217,15 @@ class ReportRepository extends AbstractReportRepository
      */
     public function getProductSalesForChannelForDates(
         ChannelInterface $channel,
-        \DateTimeInterface $from,
-        ?\DateTimeInterface $to = null
+        DateTimeInterface $fromDate,
+        ?DateTimeInterface $toDate = null
     ): array {
-        $to = $to ?? $from; // If to is null, take the same day as from to make report on one day
+        $toDate = $toDate ?? $fromDate; // If to is null, take the same day as from to make report on one day
 
         try {
-            $from = new \DateTime($from->format('Y-m-d') . ' 00:00:00');
-            $to = new \DateTime($to->format('Y-m-d') . ' 23:59:59');
-        } catch (\Exception $e) {
+            $fromDate = new DateTime($fromDate->format('Y-m-d') . ' 00:00:00');
+            $toDate = new DateTime($toDate->format('Y-m-d') . ' 23:59:59');
+        } catch (Exception $e) {
             throw new InvalidDateException('Invalid date given to report.');
         }
 
@@ -214,11 +233,15 @@ class ReportRepository extends AbstractReportRepository
 
         // Order Item Units values
         $this->addResultsByElement(
-            $this->getOrderItemUnitValues($channel, $from, $to), 'product_id', 'product_name'
+            $this->getOrderItemUnitValues($channel, $fromDate, $toDate),
+            'product_id',
+            'product_name'
         );
         // Order Items values
         $this->addResultsByElement(
-            $this->getOrderItemValues($channel, $from, $to), 'product_id', 'product_name'
+            $this->getOrderItemValues($channel, $fromDate, $toDate),
+            'product_id',
+            'product_name'
         );
 
         return $this->results;

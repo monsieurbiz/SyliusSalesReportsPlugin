@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin\Exception;
 
-class MissingLocaleException extends \Exception
+use Exception;
+
+class MissingLocaleException extends Exception
 {
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin\Controller\Admin;
 
+use DateTimeInterface;
 use MonsieurBiz\SyliusSalesReportsPlugin\Event\CustomReportEvent;
 use MonsieurBiz\SyliusSalesReportsPlugin\Exception\InvalidDateException;
 use MonsieurBiz\SyliusSalesReportsPlugin\Form\Type\DateType;
@@ -42,6 +43,8 @@ final class ReportsController extends AbstractController
 
     /**
      * ReportsController constructor.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function __construct(
         ReportRepository $reportRepository,
@@ -53,6 +56,8 @@ final class ReportsController extends AbstractController
 
     /**
      * View the report for a single date.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function indexAction(Request $request): Response
     {
@@ -83,30 +88,30 @@ final class ReportsController extends AbstractController
             $isPeriod = true;
         }
         $channel = $data['channel'];
-        $from = $data['date'] ?? $data['from'];
-        $to = $data['date'] ?? $data['to'];
+        $fromDate = $data['date'] ?? $data['from'];
+        $toDate = $data['date'] ?? $data['to'];
 
         // Reverse date if from date greater than end date
-        if ($from > $to) {
-            $tmp = $to;
-            $to = $from;
-            $from = $tmp;
-            $data['from'] = $from;
-            $data['to'] = $to;
+        if ($fromDate > $toDate) {
+            $tmp = $toDate;
+            $toDate = $fromDate;
+            $fromDate = $tmp;
+            $data['from'] = $fromDate;
+            $data['to'] = $toDate;
         }
 
         Assert::isInstanceOf($channel, ChannelInterface::class);
-        Assert::isInstanceOf($from, \DateTimeInterface::class);
-        Assert::isInstanceOf($to, \DateTimeInterface::class);
+        Assert::isInstanceOf($fromDate, DateTimeInterface::class);
+        Assert::isInstanceOf($toDate, DateTimeInterface::class);
 
         // Form is valid, we can generate the report
         try {
-            $totalSalesResult = $this->reportRepository->getSalesForChannelForDates($channel, $from, $to);
-            $averageSalesResult = $this->reportRepository->getAverageSalesForChannelForDates($channel, $from, $to);
-            $productSalesResult = $this->reportRepository->getProductSalesForChannelForDates($channel, $from, $to);
-            $productVariantSalesResult = $this->reportRepository->getProductVariantSalesForChannelForDates($channel, $from, $to);
-            $productOptionSalesResult = $this->reportRepository->getProductOptionSalesForChannelForDates($channel, $from, $to);
-            $productOptionValueSalesResult = $this->reportRepository->getProductOptionValueSalesForChannelForDates($channel, $from, $to);
+            $totalSalesResult = $this->reportRepository->getSalesForChannelForDates($channel, $fromDate, $toDate);
+            $averageSalesResult = $this->reportRepository->getAverageSalesForChannelForDates($channel, $fromDate, $toDate);
+            $productSalesResult = $this->reportRepository->getProductSalesForChannelForDates($channel, $fromDate, $toDate);
+            $productVariantSalesResult = $this->reportRepository->getProductVariantSalesForChannelForDates($channel, $fromDate, $toDate);
+            $productOptionSalesResult = $this->reportRepository->getProductOptionSalesForChannelForDates($channel, $fromDate, $toDate);
+            $productOptionValueSalesResult = $this->reportRepository->getProductOptionValueSalesForChannelForDates($channel, $fromDate, $toDate);
         } catch (InvalidDateException $e) {
             $form->addError(new FormError($e->getMessage()));
 
@@ -115,14 +120,14 @@ final class ReportsController extends AbstractController
             ]);
         }
 
-        $event = new CustomReportEvent($channel, $from, $to);
+        $event = new CustomReportEvent($channel, $fromDate, $toDate);
         $this->eventDispatcher->dispatch($event);
 
         return $this->render('@MonsieurBizSyliusSalesReportsPlugin/Admin/view.html.twig', [
             'form' => $form->createView(),
             'form_period' => $formPeriod->createView(),
-            'from' => $from,
-            'to' => $to,
+            'from' => $fromDate,
+            'to' => $toDate,
             'channel' => $data['channel'],
             'total_sales_result' => $totalSalesResult,
             'average_sales_result' => $averageSalesResult,

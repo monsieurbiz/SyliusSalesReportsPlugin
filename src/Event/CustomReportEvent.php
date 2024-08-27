@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin\Event;
 
+use DateTimeInterface;
 use MonsieurBiz\SyliusSalesReportsPlugin\Exception\AlreadyExistsReport;
 use MonsieurBiz\SyliusSalesReportsPlugin\Exception\NotExistsReport;
 use Sylius\Component\Core\Model\ChannelInterface;
@@ -31,19 +32,19 @@ final class CustomReportEvent extends Event
     private $channel;
 
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
     private $fromDate;
 
     /**
-     * @var \DateTimeInterface|null
+     * @var DateTimeInterface|null
      */
     private $toDate;
 
     public function __construct(
         ChannelInterface $channel,
-        \DateTimeInterface $fromDate,
-        ?\DateTimeInterface $toDate = null
+        DateTimeInterface $fromDate,
+        ?DateTimeInterface $toDate = null
     ) {
         $this->channel = $channel;
         $this->fromDate = $fromDate;
@@ -66,7 +67,7 @@ final class CustomReportEvent extends Event
     public function addReport(string $key, array $data): void
     {
         if (isset($this->customReports[$key])) {
-            throw new AlreadyExistsReport(sprintf('Report "%s" already exists', $key));
+            throw new AlreadyExistsReport(\sprintf('Report "%s" already exists', $key));
         }
         $this->customReports[$key] = $data;
     }
@@ -79,7 +80,7 @@ final class CustomReportEvent extends Event
     public function removeReport(string $key): void
     {
         if (!isset($this->customReports[$key])) {
-            throw new NotExistsReport(sprintf('Report "%s" does not exist', $key));
+            throw new NotExistsReport(\sprintf('Report "%s" does not exist', $key));
         }
         unset($this->customReports[$key]);
     }
@@ -89,12 +90,12 @@ final class CustomReportEvent extends Event
         return $this->channel;
     }
 
-    public function getFromDate(): \DateTimeInterface
+    public function getFromDate(): DateTimeInterface
     {
         return $this->fromDate;
     }
 
-    public function getToDate(): ?\DateTimeInterface
+    public function getToDate(): ?DateTimeInterface
     {
         return $this->toDate;
     }

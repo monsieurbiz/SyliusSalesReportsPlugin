@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin;
 
+use LogicException;
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -24,22 +25,17 @@ final class MonsieurBizSyliusSalesReportsPlugin extends Bundle
     /**
      * Returns the plugin's container extension.
      *
-     * @throws \LogicException
+     * @throws LogicException
      *
      * @return ExtensionInterface|null The container extension
      */
     public function getContainerExtension(): ?ExtensionInterface
     {
         if (null === $this->containerExtension) {
+            $this->containerExtension = false;
             $extension = $this->createContainerExtension();
-
             if (null !== $extension) {
-                if (!$extension instanceof ExtensionInterface) {
-                    throw new \LogicException(sprintf('Extension %s must implement %s.', \get_class($extension), ExtensionInterface::class));
-                }
                 $this->containerExtension = $extension;
-            } else {
-                $this->containerExtension = false;
             }
         }
 

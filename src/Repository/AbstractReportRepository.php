@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusSalesReportsPlugin\Repository;
 
+use DateTimeInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Sylius\Component\Core\Model\AdjustmentInterface;
@@ -22,6 +23,9 @@ use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Core\Repository\ProductVariantRepositoryInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 abstract class AbstractReportRepository
 {
     // Adjustment if Admin Order Creation plugin is installed
@@ -83,8 +87,8 @@ abstract class AbstractReportRepository
      */
     protected function getOrderItemUnitValues(
         ChannelInterface $channel,
-        \DateTimeInterface $from,
-        \DateTimeInterface $to
+        DateTimeInterface $fromDate,
+        DateTimeInterface $toDate
     ): array {
         $queryBuilder = $this->createOrderQuery()
             ->select($this->getSelectColumns(true, false, false))
@@ -92,7 +96,7 @@ abstract class AbstractReportRepository
             ->leftJoin('item.variant', 'variant')
             ->leftJoin('item.units', 'element')
         ;
-        $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $from, $to);
+        $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $fromDate, $toDate);
 
         return $queryBuilder->getQuery()->getArrayResult();
     }
@@ -102,15 +106,15 @@ abstract class AbstractReportRepository
      */
     protected function getOrderItemValues(
         ChannelInterface $channel,
-        \DateTimeInterface $from,
-        \DateTimeInterface $to
+        DateTimeInterface $fromDate,
+        DateTimeInterface $toDate
     ): array {
         $queryBuilder = $this->createOrderQuery()
             ->select($this->getSelectColumns(false, true, false))
             ->leftJoin('o.items', 'element')
             ->leftJoin('element.variant', 'variant')
         ;
-        $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $from, $to);
+        $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $fromDate, $toDate);
 
         return $queryBuilder->getQuery()->getArrayResult();
     }
@@ -120,11 +124,11 @@ abstract class AbstractReportRepository
      */
     protected function getOrderValues(
         ChannelInterface $channel,
-        \DateTimeInterface $from,
-        \DateTimeInterface $to
+        DateTimeInterface $fromDate,
+        DateTimeInterface $toDate
     ): array {
         $queryBuilder = $this->createOrderQuery()->select($this->getSelectColumns(false, false, true));
-        $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $from, $to, true);
+        $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $fromDate, $toDate, true);
 
         return $queryBuilder->getQuery()->getArrayResult();
     }
@@ -135,6 +139,9 @@ abstract class AbstractReportRepository
      * Column without_tax is for unit price without tax in item units
      * Columns without_tax_promo, without_tax_shipping, tax columns are respectively for promotions, shipping, tax amounts
      * Columns item and total are respectively for total for items total for orders (With shipping etc.).
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     protected function getSelectColumns(bool $isItemUnit = false, bool $isItem = false, bool $isOrder = false): string
     {
@@ -166,13 +173,15 @@ abstract class AbstractReportRepository
     /**
      * Make joins with all adjustments, add conditions and set parameters to query.
      *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     *
      * @return mixed
      */
     protected function appendAdjustmentsAndParameters(
         QueryBuilder $queryBuilder,
         ChannelInterface $channel,
-        \DateTimeInterface $from,
-        \DateTimeInterface $to,
+        DateTimeInterface $fromDate,
+        DateTimeInterface $toDate,
         bool $isOrder = false
     ) {
         $elementAlias = $isOrder ? 'o' : 'element';
@@ -180,16 +189,36 @@ abstract class AbstractReportRepository
         return $queryBuilder
             // Adjustments joins
             ->leftJoin($elementAlias . '.adjustments', 'tax_adjustment', 'WITH', 'tax_adjustment.type = :tax_type')
-            ->leftJoin($elementAlias . '.adjustments', 'shipping_adjustment', 'WITH',
-                'shipping_adjustment.type = :shipping_type')
-            ->leftJoin($elementAlias . '.adjustments', 'order_promotion_adjustment', 'WITH',
-                'order_promotion_adjustment.type = :order_promotion_type OR order_promotion_adjustment.type = :admin_order_promotion_type')
-            ->leftJoin($elementAlias . '.adjustments', 'order_item_promotion_adjustment', 'WITH',
-                'order_item_promotion_adjustment.type = :order_item_promotion_type OR order_item_promotion_adjustment.type = :admin_order_item_promotion_type')
-            ->leftJoin($elementAlias . '.adjustments', 'order_shipping_promotion_adjustment', 'WITH',
-                'order_shipping_promotion_adjustment.type = :order_shipping_promotion_type')
-            ->leftJoin($elementAlias . '.adjustments', 'order_unit_promotion_adjustment', 'WITH',
-                'order_unit_promotion_adjustment.type = :order_unit_promotion_type')
+            ->leftJoin(
+                $elementAlias . '.adjustments',
+                'shipping_adjustment',
+                'WITH',
+                'shipping_adjustment.type = :shipping_type'
+            )
+            ->leftJoin(
+                $elementAlias . '.adjustments',
+                'order_promotion_adjustment',
+                'WITH',
+                'order_promotion_adjustment.type = :order_promotion_type OR order_promotion_adjustment.type = :admin_order_promotion_type'
+            )
+            ->leftJoin(
+                $elementAlias . '.adjustments',
+                'order_item_promotion_adjustment',
+                'WITH',
+                'order_item_promotion_adjustment.type = :order_item_promotion_type OR order_item_promotion_adjustment.type = :admin_order_item_promotion_type'
+            )
+            ->leftJoin(
+                $elementAlias . '.adjustments',
+                'order_shipping_promotion_adjustment',
+                'WITH',
+                'order_shipping_promotion_adjustment.type = :order_shipping_promotion_type'
+            )
+            ->leftJoin(
+                $elementAlias . '.adjustments',
+                'order_unit_promotion_adjustment',
+                'WITH',
+                'order_unit_promotion_adjustment.type = :order_unit_promotion_type'
+            )
             // Adjustments parameters
             ->setParameter('tax_type', AdjustmentInterface::TAX_ADJUSTMENT)
             ->setParameter('shipping_type', AdjustmentInterface::SHIPPING_ADJUSTMENT)
@@ -208,13 +237,15 @@ abstract class AbstractReportRepository
             ->setParameter('channel', $channel)
             ->setParameter('states', [OrderInterface::STATE_FULFILLED, OrderInterface::STATE_NEW])
             ->setParameter('payment_states', [OrderPaymentStates::STATE_PAID]) // @TODO Take care of OrderPaymentStates::STATE_PARTIALLY_PAID
-            ->setParameter('from', $from)
-            ->setParameter('to', $to)
+            ->setParameter('from', $fromDate)
+            ->setParameter('to', $toDate)
         ;
     }
 
     /**
      * Populate result array with options and option values data.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function populateOptions(string $localeCode): array
     {
@@ -252,8 +283,12 @@ abstract class AbstractReportRepository
         $queryBuilder = $this->createProductVariantQuery()
             ->select('v.id AS variant_id, option.code AS option_code, option_translation.name AS option_label, option_value.code AS option_value_code, option_value_translation.value AS option_value_label')
             ->leftJoin('v.optionValues', 'option_value')
-            ->leftJoin('option_value.translations', 'option_value_translation', 'WITH',
-                'option_value_translation.locale = :locale')
+            ->leftJoin(
+                'option_value.translations',
+                'option_value_translation',
+                'WITH',
+                'option_value_translation.locale = :locale'
+            )
             ->leftJoin('option_value.option', 'option')
             ->leftJoin('option.translations', 'option_translation', 'WITH', 'option_translation.locale = :locale')
             ->setParameter('locale', $localeCode)
@@ -291,6 +326,9 @@ abstract class AbstractReportRepository
 
     /**
      * Increment results with given array.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     protected function addResults(array $elementResults, ?string $groupField = null): void
     {
@@ -314,6 +352,10 @@ abstract class AbstractReportRepository
 
     /**
      * Make the sum of results by elements.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     protected function addResultsByElement(
         array $elementResults,
@@ -365,6 +407,8 @@ abstract class AbstractReportRepository
 
     /**
      * Make the average of results depending on number of elements.
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     protected function averageResult(): void
     {
@@ -374,9 +418,11 @@ abstract class AbstractReportRepository
                 $this->result[$key] = round($this->result[$key] / $numberOfElements);
             }
             $this->result['number_of_elements'] = \count($this->elements);
-        } else {
-            $this->result['number_of_elements'] = 0;
+
+            return;
         }
+
+        $this->result['number_of_elements'] = 0;
     }
 
     /**

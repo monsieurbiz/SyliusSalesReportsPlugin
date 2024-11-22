@@ -1,0 +1,39 @@
+monsieurbiz:
+    sales_reports:
+        ui:
+            title: 'Umsatzberichte'
+            subtitle: 'Sehen Sie Ihre Umsatzberichte an'
+            day_report: 'Tagesbericht'
+            day_report_for: 'Tagesbericht für den %date% für %channel%'
+            period_report: 'Zeitraum-Bericht'
+            period_report_for: 'Zeitraum-Bericht vom %from% bis %to% für %channel%'
+            global_report: 'Gesamtbericht'
+            average_report: 'Durchschnittsbericht'
+            number_of_orders: 'Anzahl der Bestellungen:'
+            product_report: 'Produktbericht'
+            product_variant_report: 'Produktvariantenbericht'
+            option_report: 'Optionsbericht'
+            option_value_report: 'Optionswert-Bericht'
+            statistics: 'Statistiken'
+        form:
+            channel:
+                label: 'Kanal'
+            date:
+                label: 'Bestimmter Tag'
+            from_date:
+                label: 'Von'
+            to_date:
+                label: 'Bis'
+        view:
+            amount_without_tax: 'Betrag ohne Steuern'
+            promo_amount_without_tax: 'Aktionsbetrag ohne Steuern'
+            shipping_amount_without_tax: 'Versandbetrag ohne Steuern'
+            tax_amount: 'Steuerbetrag'
+            total_amount: 'Gesamtbetrag mit Steuern'
+            number_of_orders: 'Anzahl der Bestellungen'
+            product_name: 'Produktname'
+            product_variant_name: 'Produktvariantenname'
+            no_result: 'Kein Ergebnis'
+            option_name: 'Optionsname'
+            option_value: 'Optionswert'
+            total: 'Gesamt'

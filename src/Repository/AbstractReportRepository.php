@@ -167,6 +167,7 @@ abstract class AbstractReportRepository
             // Totals
             $isOrder ? 'o.total as total' : '0 as total',
             $isItem ? 'element.total as item_row' : '0 as item_row',
+            $isItem ? 'element.quantity as item_qty' : '0 as item_qty',
         ]);
     }
 
@@ -321,6 +322,7 @@ abstract class AbstractReportRepository
             'tax_total' => 0,
             'total' => 0,
             'item_row_total' => 0,
+            'item_qty_total' => 0,
         ];
         $this->elements = [];
     }

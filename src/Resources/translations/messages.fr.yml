@@ -16,6 +16,7 @@ monsieurbiz:
             option_report: 'Synthèse par option'
             option_value_report: 'Synthèse par valeur d''option'
             statistics: 'Statistiques'
+            warning_options: 'Attention, un produit avec plusieurs options est comptabilisé autant de fois que d''options'
         form:
             channel:
                 label: 'Canal'

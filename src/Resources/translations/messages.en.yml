@@ -16,6 +16,7 @@ monsieurbiz:
             option_report: 'Option report'
             option_value_report: 'Option value report'
             statistics: 'Statistics'
+            warning_options: 'Warning, a product with several options is counted as many times as options'
         form:
             channel:
                 label: 'Channel'

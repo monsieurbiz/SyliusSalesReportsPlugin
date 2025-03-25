@@ -16,6 +16,7 @@ monsieurbiz:
             option_report: 'Opties rapportage'
             option_value_report: 'Optiewaardes rapportage'
             statistics: 'Statistieken'
+            warning_options: 'Waarschu wing, een product met meerdere opties wordt geteld zoveel keer als opties'
         form:
             channel:
                 label: 'Kanaal'

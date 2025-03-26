@@ -161,12 +161,13 @@ abstract class AbstractReportRepository
             $isItemUnit ? 'item.unitPrice - (CASE WHEN tax_adjustment.neutral = 1 THEN tax_adjustment.amount ELSE 0 END) as without_tax' : '0 as without_tax',
             // Only retrieve without_tax price for item units
             '(COALESCE(order_promotion_adjustment.amount, 0) + COALESCE(order_item_promotion_adjustment.amount, 0) + COALESCE(order_shipping_promotion_adjustment.amount, 0) + COALESCE(order_unit_promotion_adjustment.amount, 0)) AS without_tax_promo',
-            'shipping_adjustment.amount as without_tax_shipping',
+            'shipping_adjustment.amount - (CASE WHEN shipping_tax_adjustment.neutral = 1 AND shipping_tax_adjustment.shipment IS NOT NULL THEN shipping_tax_adjustment.amount ELSE 0 END) as without_tax_shipping',
             'tax_adjustment.amount as tax',
 
             // Totals
             $isOrder ? 'o.total as total' : '0 as total',
             $isItem ? 'element.total as item_row' : '0 as item_row',
+            $isItem ? 'element.quantity as item_qty' : '0 as item_qty',
         ]);
     }
 
@@ -188,7 +189,8 @@ abstract class AbstractReportRepository
 
         return $queryBuilder
             // Adjustments joins
-            ->leftJoin($elementAlias . '.adjustments', 'tax_adjustment', 'WITH', 'tax_adjustment.type = :tax_type')
+            ->leftJoin($elementAlias . '.adjustments', 'tax_adjustment', 'WITH', 'tax_adjustment.type = :tax_type AND tax_adjustment.shipment IS NULL')
+            ->leftJoin($elementAlias . '.adjustments', 'shipping_tax_adjustment', 'WITH', 'shipping_tax_adjustment.type = :tax_type AND shipping_tax_adjustment.shipment IS NOT NULL')
             ->leftJoin(
                 $elementAlias . '.adjustments',
                 'shipping_adjustment',
@@ -320,6 +322,7 @@ abstract class AbstractReportRepository
             'tax_total' => 0,
             'total' => 0,
             'item_row_total' => 0,
+            'item_qty_total' => 0,
         ];
         $this->elements = [];
     }

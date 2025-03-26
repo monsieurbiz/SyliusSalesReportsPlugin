@@ -10,11 +10,13 @@ monsieurbiz:
             global_report: 'Algemene rapportage'
             average_report: 'Gemiddelde rapportage'
             number_of_orders: 'Aantal bestellingen:'
+            quantity: 'Totaal aantal artikelen:'
             product_report: 'Product rapportage'
             product_variant_report: 'Product varianten rapportage'
             option_report: 'Opties rapportage'
             option_value_report: 'Optiewaardes rapportage'
             statistics: 'Statistieken'
+            warning_options: 'Waarschu wing, een product met meerdere opties wordt geteld zoveel keer als opties'
         form:
             channel:
                 label: 'Kanaal'
@@ -31,6 +33,8 @@ monsieurbiz:
             tax_amount: 'Tax amount'
             total_amount: 'Totaal aantallen met belasting'
             number_of_orders: 'Aantal bestellingen'
+            quantity: 'Aantal'
+            average_quantity: 'Gemiddelde aantal'
             product_name: 'Product naam'
             product_variant_name: 'Product variant naam'
             no_result: 'Geen resultaat'

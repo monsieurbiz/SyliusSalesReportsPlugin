@@ -10,11 +10,13 @@ monsieurbiz:
             global_report: 'Synthèse globale'
             average_report: 'Synthèse moyenne'
             number_of_orders: 'Nombre de commandes :'
+            quantity: 'Quantité d''articles :'
             product_report: 'Synthèse par produit'
             product_variant_report: 'Synthèse par variante produit'
             option_report: 'Synthèse par option'
             option_value_report: 'Synthèse par valeur d''option'
             statistics: 'Statistiques'
+            warning_options: 'Attention, un produit avec plusieurs options est comptabilisé autant de fois que d''options'
         form:
             channel:
                 label: 'Canal'
@@ -31,6 +33,8 @@ monsieurbiz:
             tax_amount: 'Montant TVA'
             total_amount: 'Montant TTC'
             number_of_orders: 'Nombre de commandes'
+            quantity: 'Quantité'
+            average_quantity: 'Quantité moyenne'
             product_name: 'Nom du produit'
             product_variant_name: 'Nom du variant produit'
             no_result: 'Pas de résultat'

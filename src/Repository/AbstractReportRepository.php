@@ -76,7 +76,9 @@ abstract class AbstractReportRepository
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
-        ProductVariantRepositoryInterface $productVariantRepository
+        ProductVariantRepositoryInterface $productVariantRepository,
+        protected ?array $orderStates,
+        protected ?array $paymentStates,
     ) {
         $this->orderRepository = $orderRepository;
         $this->productVariantRepository = $productVariantRepository;
@@ -186,6 +188,8 @@ abstract class AbstractReportRepository
         bool $isOrder = false
     ) {
         $elementAlias = $isOrder ? 'o' : 'element';
+        $orderStates = $this->orderStates ?? [OrderInterface::STATE_FULFILLED, OrderInterface::STATE_NEW];
+        $paymentStates = $this->paymentStates ?? [OrderPaymentStates::STATE_PAID];
 
         return $queryBuilder
             // Adjustments joins
@@ -237,8 +241,8 @@ abstract class AbstractReportRepository
             ->andWhere('o.checkoutCompletedAt BETWEEN :from AND :to')
             // Filters parameters
             ->setParameter('channel', $channel)
-            ->setParameter('states', [OrderInterface::STATE_FULFILLED, OrderInterface::STATE_NEW])
-            ->setParameter('payment_states', [OrderPaymentStates::STATE_PAID]) // @TODO Take care of OrderPaymentStates::STATE_PARTIALLY_PAID
+            ->setParameter('states', $orderStates)
+            ->setParameter('payment_states', $paymentStates)
             ->setParameter('from', $fromDate)
             ->setParameter('to', $toDate)
         ;

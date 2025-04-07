@@ -1,3 +1,10 @@
+parameters:
+    monsieurbiz.sales_reports.order_states:
+        - !php/const Sylius\Component\Order\Model\OrderInterface::STATE_FULFILLED
+        - !php/const Sylius\Component\Order\Model\OrderInterface::STATE_NEW
+    monsieurbiz.sales_reports.payment_states:
+        - !php/const Sylius\Component\Core\OrderPaymentStates::STATE_PAID
+
 services:
   # Default configuration for services in *this* file
   _defaults:
@@ -26,3 +33,8 @@ services:
     class: MonsieurBiz\SyliusSalesReportsPlugin\Menu\AdminMenuListener
     tags:
       - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addAdminMenuItem }
+
+  MonsieurBiz\SyliusSalesReportsPlugin\Repository\ReportRepository:
+    arguments:
+        $orderStates: '%monsieurbiz.sales_reports.order_states%'
+        $paymentStates: '%monsieurbiz.sales_reports.payment_states%'

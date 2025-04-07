@@ -54,6 +54,18 @@ monsieurbiz_sales_reports_plugin:
 
 All reports columns are sortable by clicking on it.
 
+If you want to change order or payments states used in the reports, you can configure it in the `config/packages/monsieurbiz_sylius_sales_reports_plugin.yaml` file:
+
+```yaml
+parameters:
+    monsieurbiz.sales_reports.order_states:
+        - …
+    monsieurbiz.sales_reports.payment_states:
+        - …
+```
+
+(FYI, is it possible to use `!php/const` to use constants in the config file)
+
 ### Global sales report
 
 ![Global sales report](screenshots/global.png)

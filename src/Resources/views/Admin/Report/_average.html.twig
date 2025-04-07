@@ -21,7 +21,7 @@
     </thead>
     <tbody>
     <tr>
-        <td>{{ (average_sales_result.item_qty_total / average_sales_result.number_of_elements)|round(2, 'floor')  }}</td>
+        <td>{{ average_sales_result.number_of_elements ? (average_sales_result.item_qty_total / average_sales_result.number_of_elements)|round(2, 'floor') : 0 }}</td>
         <td>{{ money.format(average_sales_result.without_tax_total, channel.baseCurrency.code) }}</td>
         <td>{{ money.format(average_sales_result.without_tax_promo_total, channel.baseCurrency.code) }}</td>
         <td>{{ money.format(average_sales_result.without_tax_shipping_total, channel.baseCurrency.code) }}</td>

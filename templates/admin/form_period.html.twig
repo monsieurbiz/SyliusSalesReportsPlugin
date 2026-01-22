@@ -1,0 +1,37 @@
+{% set form_period = hookable_metadata.context.form_period %}
+{% form_theme form_period '@SyliusAdmin/shared/form_theme.html.twig' %}
+
+<div class="row justify-content-center m-4">
+    <div class="col-md-10 col-lg-10">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h3 class="card-title mb-0">
+                    <i class="bi bi-calendar-range me-2"></i>{{ 'monsieurbiz.sales_reports.ui.period_report'|trans }}
+                </h3>
+            </div>
+            <div class="card-body">
+                {{ form_start(form_period, {'action': path('monsieurbiz_sylius_sales_reports_admin_view'), 'attr': {'novalidate': 'novalidate'}}) }}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form_row(form_period.from) }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form_row(form_period.to) }}
+                        </div>
+                        <div class="col-12 mb-3">
+                            {{ form_row(form_period.channel) }}
+                        </div>
+                    </div>
+
+                    <div class="m-3 text-start">
+                        <button class="btn btn-primary px-4" type="submit">
+                            <i class="bi bi-search me-2"></i>{{ 'sylius.ui.generate'|trans }}
+                        </button>
+                    </div>
+                    
+                    {{ form_row(form_period._token) }}
+                {{ form_end(form_period, {'render_rest': false}) }}
+            </div>
+        </div>
+    </div>
+</div>

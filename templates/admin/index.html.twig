@@ -1,0 +1,13 @@
+{% extends '@SyliusAdmin/shared/layout/base.html.twig' %}
+
+{% block title %}{{ "monsieurbiz.sales_reports.ui.title"|trans }} {{ parent() }}{% endblock %}
+
+{% block body %}
+
+        {% hook ['sylius_admin.monsieurbiz_sales_reports.index', 'sylius_admin.common.index'] with {
+            form: form,
+            form_period: form_period
+        }%}   
+
+
+{% endblock %}

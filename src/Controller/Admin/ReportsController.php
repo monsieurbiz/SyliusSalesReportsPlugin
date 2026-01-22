@@ -68,13 +68,13 @@ final class ReportsController extends AbstractController
         $formPeriod->handleRequest($request);
 
         if (!$form->isSubmitted() && !$formPeriod->isSubmitted()) {
-            return $this->render('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
+            return $this->render('@MonsieurBizSyliusSalesReportsPlugin/admin/index.html.twig', [
                 'form' => $form->createView(),
                 'form_period' => $formPeriod->createView(),
             ]);
         }
         if (($form->isSubmitted() && !$form->isValid()) || ($formPeriod->isSubmitted() && !$formPeriod->isValid())) {
-            return $this->render('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
+            return $this->render('@MonsieurBizSyliusSalesReportsPlugin/admin/index.html.twig', [
                 'form' => $form->createView(),
                 'form_period' => $formPeriod->createView(),
             ]);
@@ -115,7 +115,7 @@ final class ReportsController extends AbstractController
         } catch (InvalidDateException $e) {
             $form->addError(new FormError($e->getMessage()));
 
-            return $this->render('@MonsieurBizSyliusSalesReportsPlugin/Admin/index.html.twig', [
+            return $this->render('@MonsieurBizSyliusSalesReportsPlugin/admin/index.html.twig', [
                 'form' => $form->createView(),
             ]);
         }
@@ -123,7 +123,7 @@ final class ReportsController extends AbstractController
         $event = new CustomReportEvent($channel, $fromDate, $toDate);
         $this->eventDispatcher->dispatch($event);
 
-        return $this->render('@MonsieurBizSyliusSalesReportsPlugin/Admin/view.html.twig', [
+        return $this->render('@MonsieurBizSyliusSalesReportsPlugin/admin/views.html.twig', [
             'form' => $form->createView(),
             'form_period' => $formPeriod->createView(),
             'from' => $fromDate,

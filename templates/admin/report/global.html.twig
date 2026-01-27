@@ -1,7 +1,10 @@
-{% import "@SyliusAdmin/Common/Macro/money.html.twig" as money %}
+{% import '@SyliusAdmin/shared/helper/money.html.twig' as money %}
+
+{% set total_sales_result = hookable_metadata.context.total_sales_result %}
+{% set channel = hookable_metadata.context.channel %}
 
 <h3>{{ 'monsieurbiz.sales_reports.ui.global_report'|trans }}</h3>
-<table class="ui celled table">
+<table class="table table-bordered">
     <thead>
     <tr>
         <th>{{ 'monsieurbiz.sales_reports.view.amount_without_tax' | trans }}</th>

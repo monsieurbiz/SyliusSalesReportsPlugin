@@ -25,6 +25,9 @@ sylius_twig_hooks:
             period_form:
                 template: '@MonsieurBizSyliusSalesReportsPlugin/admin/form_period.html.twig'
                 priority: 100
+            report:
+                template: '@MonsieurBizSyliusSalesReportsPlugin/admin/report.html.twig'
+                priority: 90
 
 
         'sylius_admin.monsieurbiz_sales_reports.index.content.header':

@@ -1,0 +1,27 @@
+{% extends '@SyliusAdmin/shared/layout/base.html.twig' %}
+
+{% import '@SyliusAdmin/shared/helper/money.html.twig' as money %}
+
+{% block title %}{{ "monsieurbiz.sales_reports.ui.title"|trans }} {{ parent() }}{% endblock %}
+
+{% block body %}
+        {% hook ['sylius_admin.monsieurbiz_sales_reports.index', 'sylius_admin.common.index'] with {
+        form: form,
+        form_period: form_period,
+        channel: channel,
+        from: from,
+        to: to,
+        total_sales_result: total_sales_result,
+        average_sales_result: average_sales_result,
+        product_sales_result: product_sales_result,
+        product_variant_sales_result: product_variant_sales_result,
+        product_option_sales_result: product_option_sales_result,
+        product_option_value_sales_result: product_option_value_sales_result,
+        is_period: is_period,
+        custom_reports: custom_reports
+    } %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

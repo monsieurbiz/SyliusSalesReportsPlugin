@@ -1,0 +1,38 @@
+{% import '@SyliusAdmin/shared/helper/money.html.twig' as money %}
+{% set average_sales_result = hookable_metadata.context.average_sales_result %}
+{% set channel = hookable_metadata.context.channel %}
+
+<div class="mb-5">
+    <h4 class="fw-bold mb-3">{{ 'monsieurbiz.sales_reports.ui.average_report'|trans }}</h4>
+    
+    {% if average_sales_result.number_of_elements is defined %}
+    <p class="text-muted mb-2">
+        {{ 'monsieurbiz.sales_reports.ui.number_of_orders'|trans }} : <strong>{{ average_sales_result.number_of_elements }}</strong>
+    </p>
+    {% endif %}
+
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle w-auto">
+            <thead class="table-light">
+                <tr>
+                    <th class="px-3">{{ 'monsieurbiz.sales_reports.view.average_quantity' | trans }}</th>
+                    <th class="px-3">{{ 'monsieurbiz.sales_reports.view.amount_without_tax' | trans }}</th>
+                    <th class="px-3">{{ 'monsieurbiz.sales_reports.view.promo_amount_without_tax' | trans }}</th>
+                    <th class="px-3">{{ 'monsieurbiz.sales_reports.view.shipping_amount_without_tax' | trans }}</th>
+                    <th class="px-3">{{ 'monsieurbiz.sales_reports.view.tax_amount' | trans }}</th>
+                    <th class="px-3">{{ 'monsieurbiz.sales_reports.view.total_amount' | trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="px-3 text-center">{{ average_sales_result.number_of_elements ? (average_sales_result.item_qty_total / average_sales_result.number_of_elements)|round(2, 'floor') : 0 }}</td>
+                    <td class="px-3 text-nowrap">{{ money.format(average_sales_result.without_tax_total, channel.baseCurrency.code) }}</td>
+                    <td class="px-3 text-nowrap">{{ money.format(average_sales_result.without_tax_promo_total, channel.baseCurrency.code) }}</td>
+                    <td class="px-3 text-nowrap">{{ money.format(average_sales_result.without_tax_shipping_total, channel.baseCurrency.code) }}</td>
+                    <td class="px-3 text-nowrap">{{ money.format(average_sales_result.tax_total, channel.baseCurrency.code) }}</td>
+                    <td class="px-3 text-nowrap fw-bold">{{ money.format(average_sales_result.total, channel.baseCurrency.code) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

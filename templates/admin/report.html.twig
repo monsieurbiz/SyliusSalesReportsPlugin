@@ -1,0 +1,39 @@
+{% if hookable_metadata.context.channel is defined %}
+{% set channel = hookable_metadata.context.channel %}
+{% set from = hookable_metadata.context.from %}
+{% set to = hookable_metadata.context.to %}
+
+{% set total_sales_result = hookable_metadata.context.total_sales_result %}
+{% set average_sales_result = hookable_metadata.context.average_sales_result %}
+{% set product_sales_result = hookable_metadata.context.product_sales_result %}
+{% set product_variant_sales_result = hookable_metadata.context.product_variant_sales_result %}
+{% set product_option_sales_result = hookable_metadata.context.product_option_sales_result %}
+{% set product_option_value_sales_result = hookable_metadata.context.product_option_value_sales_result %}
+
+<div class="my-4"></div>
+
+
+
+<div class="card p-4">
+    {% if from != to %}
+        <h2>{{ 'monsieurbiz.sales_reports.ui.period_report_for'|trans({'%from%': from|date("d/m/Y"), '%to%': to|date("d/m/Y"), '%channel%': channel.name}) }}</h2>
+    {% else %}
+        <h2>{{ 'monsieurbiz.sales_reports.ui.day_report_for'|trans({'%date%': from|date("d/m/Y"), '%channel%': channel.name}) }}</h2>
+    {% endif %}
+         <div class="card-body">
+                {% include('@MonsieurBizSyliusSalesReportsPlugin/admin/report/global.html.twig') %}
+                <div class="my-4"></div>
+                {% include('@MonsieurBizSyliusSalesReportsPlugin/admin/report/average.html.twig') %}
+                <div class="my-4"></div>
+                {% include('@MonsieurBizSyliusSalesReportsPlugin/admin/report/product.html.twig') %}
+                <div class="my-4"></div>
+                {% include('@MonsieurBizSyliusSalesReportsPlugin/admin/report/productVariant.html.twig') %}
+                <div class="my-4"></div>
+                {% include('@MonsieurBizSyliusSalesReportsPlugin/admin/report/option.html.twig') %}
+                <div class="my-4"></div>
+                {% include('@MonsieurBizSyliusSalesReportsPlugin/admin/report/optionValue.html.twig') %}
+            </div>
+    
+
+</div>
+{% endif %}

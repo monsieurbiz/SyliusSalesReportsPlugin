@@ -14,6 +14,8 @@ sylius_twig_hooks:
         'sylius_admin.monsieurbiz_sales_reports.index.content':
             header:
                 template: '@SyliusAdmin/shared/crud/common/content/header.html.twig'
+                configuration:
+                    title: monsieurbiz.sales_reports.ui.title
                 priority: 200
             grid:
                 enabled: false
@@ -27,7 +29,10 @@ sylius_twig_hooks:
 
         'sylius_admin.monsieurbiz_sales_reports.index.content.header':
             breadcrumbs:
-                enabled: false
+                template: '@SyliusAdmin/shared/crud/index/content/header/breadcrumbs.html.twig'
+                configuration:
+                    title: monsieurbiz.sales_reports.ui.title
+                priority: 100
             title_block:
                 template: '@SyliusAdmin/shared/crud/common/content/header/title_block.html.twig'
                 priority: 0

@@ -14,11 +14,9 @@ A simple plugin to have sales reports in Sylius
 
 ## Compatibility
 
-| Sylius Version | PHP Version     |
-|----------------|-----------------|
-| 1.12           | 8.1 - 8.2 - 8.3 |
-| 1.13           | 8.1 - 8.2 - 8.3 |
-| 1.14           | 8.1 - 8.2 - 8.3 |
+| Sylius Version | PHP Version |
+|----------------|-------------|
+| 2.0            | 8.2 - 8.3   |
 
 ## Installation
 
@@ -47,7 +45,7 @@ Finally import the routes in `config/routes/monsieurbiz_sylius_sales_reports_plu
 
 ```yaml
 monsieurbiz_sales_reports_plugin:
-    resource: "@MonsieurBizSyliusSalesReportsPlugin/Resources/config/routing.yaml"
+    resource: "@MonsieurBizSyliusSalesReportsPlugin/config/routing.yaml"
 ```
 
 ## Reports

@@ -12,8 +12,6 @@
 
 <div class="my-4"></div>
 
-
-
 <div class="card p-4">
     {% if from != to %}
         <h2>{{ 'monsieurbiz.sales_reports.ui.period_report_for'|trans({'%from%': from|date("d/m/Y"), '%to%': to|date("d/m/Y"), '%channel%': channel.name}) }}</h2>
@@ -33,7 +31,6 @@
                 <div class="my-4"></div>
                 {% include('@MonsieurBizSyliusSalesReportsPlugin/admin/report/optionValue.html.twig') %}
             </div>
-    
 
 </div>
 {% endif %}

@@ -25,6 +25,7 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude(
         [
             'tests/Application',
+            'tests/Performance/vendor',
         ]
     )
 ;

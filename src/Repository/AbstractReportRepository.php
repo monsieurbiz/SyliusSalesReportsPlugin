@@ -92,15 +92,22 @@ abstract class AbstractReportRepository
         DateTimeInterface $fromDate,
         DateTimeInterface $toDate
     ): array {
+        return $this->createOrderItemUnitValuesQuery($channel, $fromDate, $toDate)->getQuery()->getArrayResult();
+    }
+
+    protected function createOrderItemUnitValuesQuery(
+        ChannelInterface $channel,
+        DateTimeInterface $fromDate,
+        DateTimeInterface $toDate
+    ): QueryBuilder {
         $queryBuilder = $this->createOrderQuery()
             ->select($this->getSelectColumns(true, false, false))
             ->leftJoin('o.items', 'item')
             ->leftJoin('item.variant', 'variant')
             ->leftJoin('item.units', 'element')
         ;
-        $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $fromDate, $toDate);
 
-        return $queryBuilder->getQuery()->getArrayResult();
+        return $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $fromDate, $toDate);
     }
 
     /**
@@ -111,14 +118,21 @@ abstract class AbstractReportRepository
         DateTimeInterface $fromDate,
         DateTimeInterface $toDate
     ): array {
+        return $this->createOrderItemValuesQuery($channel, $fromDate, $toDate)->getQuery()->getArrayResult();
+    }
+
+    protected function createOrderItemValuesQuery(
+        ChannelInterface $channel,
+        DateTimeInterface $fromDate,
+        DateTimeInterface $toDate
+    ): QueryBuilder {
         $queryBuilder = $this->createOrderQuery()
             ->select($this->getSelectColumns(false, true, false))
             ->leftJoin('o.items', 'element')
             ->leftJoin('element.variant', 'variant')
         ;
-        $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $fromDate, $toDate);
 
-        return $queryBuilder->getQuery()->getArrayResult();
+        return $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $fromDate, $toDate);
     }
 
     /**
@@ -129,10 +143,17 @@ abstract class AbstractReportRepository
         DateTimeInterface $fromDate,
         DateTimeInterface $toDate
     ): array {
-        $queryBuilder = $this->createOrderQuery()->select($this->getSelectColumns(false, false, true));
-        $queryBuilder = $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $fromDate, $toDate, true);
+        return $this->createOrderValuesQuery($channel, $fromDate, $toDate)->getQuery()->getArrayResult();
+    }
 
-        return $queryBuilder->getQuery()->getArrayResult();
+    protected function createOrderValuesQuery(
+        ChannelInterface $channel,
+        DateTimeInterface $fromDate,
+        DateTimeInterface $toDate
+    ): QueryBuilder {
+        $queryBuilder = $this->createOrderQuery()->select($this->getSelectColumns(false, false, true));
+
+        return $this->appendAdjustmentsAndParameters($queryBuilder, $channel, $fromDate, $toDate, true);
     }
 
     /**
@@ -178,7 +199,7 @@ abstract class AbstractReportRepository
      *
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      *
-     * @return mixed
+     * @return QueryBuilder
      */
     protected function appendAdjustmentsAndParameters(
         QueryBuilder $queryBuilder,
@@ -188,10 +209,8 @@ abstract class AbstractReportRepository
         bool $isOrder = false
     ) {
         $elementAlias = $isOrder ? 'o' : 'element';
-        $orderStates = $this->orderStates ?? [OrderInterface::STATE_FULFILLED, OrderInterface::STATE_NEW];
-        $paymentStates = $this->paymentStates ?? [OrderPaymentStates::STATE_PAID];
 
-        return $queryBuilder
+        $queryBuilder
             // Adjustments joins
             ->leftJoin($elementAlias . '.adjustments', 'tax_adjustment', 'WITH', 'tax_adjustment.type = :tax_type AND tax_adjustment.shipment IS NULL')
             ->leftJoin($elementAlias . '.adjustments', 'shipping_tax_adjustment', 'WITH', 'shipping_tax_adjustment.type = :tax_type AND shipping_tax_adjustment.shipment IS NOT NULL')
@@ -234,6 +253,21 @@ abstract class AbstractReportRepository
             ->setParameter('admin_order_item_promotion_type', self::ADMIN_ORDER_ITEM_DISCOUNT_ADJUSTMENT)
             ->setParameter('order_shipping_promotion_type', AdjustmentInterface::ORDER_SHIPPING_PROMOTION_ADJUSTMENT)
             ->setParameter('order_unit_promotion_type', AdjustmentInterface::ORDER_UNIT_PROMOTION_ADJUSTMENT)
+        ;
+
+        return $this->appendOrderFilters($queryBuilder, $channel, $fromDate, $toDate);
+    }
+
+    protected function appendOrderFilters(
+        QueryBuilder $queryBuilder,
+        ChannelInterface $channel,
+        DateTimeInterface $fromDate,
+        DateTimeInterface $toDate
+    ): QueryBuilder {
+        $orderStates = $this->orderStates ?? [OrderInterface::STATE_FULFILLED, OrderInterface::STATE_NEW];
+        $paymentStates = $this->paymentStates ?? [OrderPaymentStates::STATE_PAID];
+
+        return $queryBuilder
             // Filters on orders in channel, which are paid, not refunded and completed between the wanted dates
             ->andWhere('o.channel = :channel')
             ->andWhere('o.state IN (:states)')
@@ -260,7 +294,7 @@ abstract class AbstractReportRepository
 
         foreach ($this->results as $result) {
             $variantId = $result['variant_id'];
-            $options = $variantOptions[$variantId];
+            $options = $variantOptions[$variantId] ?? [];
 
             // Rename field with _total
             foreach ($result as $key => $value) {
@@ -282,10 +316,15 @@ abstract class AbstractReportRepository
     }
 
     /**
-     * Retrieve options for all variants and build an array.
+     * Retrieve options for the variants in the current results and build an array.
      */
     protected function getVariantsOptions(string $localeCode): array
     {
+        $variantIds = array_values(array_filter(array_keys($this->results), static fn ($variantId): bool => '' !== $variantId));
+        if ([] === $variantIds) {
+            return [];
+        }
+
         $queryBuilder = $this->createProductVariantQuery()
             ->select('v.id AS variant_id, option.code AS option_code, option_translation.name AS option_label, option_value.code AS option_value_code, option_value_translation.value AS option_value_label')
             ->leftJoin('v.optionValues', 'option_value')
@@ -298,6 +337,8 @@ abstract class AbstractReportRepository
             ->leftJoin('option_value.option', 'option')
             ->leftJoin('option.translations', 'option_translation', 'WITH', 'option_translation.locale = :locale')
             ->setParameter('locale', $localeCode)
+            ->andWhere('v.id IN (:variant_ids)')
+            ->setParameter('variant_ids', $variantIds)
         ;
 
         $variantOptionsValues = [];
@@ -373,13 +414,18 @@ abstract class AbstractReportRepository
         // Loop on given elements to increments current result
         foreach ($elementResults as $elementResult) {
             $elementId = $elementResult[$groupField];
+            // Rebind before initializing: writing to the previous reference would erase its order-id set.
+            $elements = [];
+            $this->elements = &$elements;
             // Init results for this element or retrieve existing one
             if (!isset($this->results[$elementId])) {
                 $this->initResult();
+                $this->elementsArray[$elementId] = [];
             } else {
                 $this->result = $this->results[$elementId];
-                $this->elements = $this->elementsArray[$elementId];
             }
+            // Mutate the order-id set in place; copying it for every row is quadratic.
+            $this->elements = &$this->elementsArray[$elementId];
             // Add results by order
             $this->addResults([$elementResult], 'order_id');
             $this->result['order_id'] = $elementResult['order_id'];
@@ -403,8 +449,11 @@ abstract class AbstractReportRepository
 
             // Update results for this element
             $this->results[$elementId] = $this->result;
-            $this->elementsArray[$elementId] = $this->elements;
         }
+
+        // Do not leave initResult() or subsequent report calls bound to this group's set.
+        $elements = $this->elements;
+        $this->elements = &$elements;
 
         // Aggregate number of order per element
         foreach ($this->results as $key => $value) {

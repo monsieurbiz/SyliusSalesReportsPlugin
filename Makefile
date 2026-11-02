@@ -125,6 +125,19 @@ test.phpmd: ## Run PHPMD
 test.phpunit: ## Run PHPUnit
 	${COMPOSER} phpunit
 
+BENCHMARK_ORDERS ?= 30000
+
+benchmark.fixtures: ## Replace the isolated benchmark tables (explicit local database URL required)
+	env XDEBUG_MODE=off php -d memory_limit=1G tests/Performance/run.php --orders=${BENCHMARK_ORDERS} --load-only
+
+test.performance: ## Check annual report correctness, query count and the 180-second ceiling
+	python3 tests/Performance/watchdog.py 185 env XDEBUG_MODE=off php -d memory_limit=1G tests/Performance/run.php --orders=${BENCHMARK_ORDERS}
+
+test.unit.isolated: ## Run report unit tests with the isolated Sylius 1.14 dependencies
+	env XDEBUG_MODE=off php tests/Performance/vendor/bin/phpunit --no-configuration --bootstrap tests/Performance/vendor/autoload.php tests/Unit
+
+.PHONY: benchmark.fixtures test.performance test.unit.isolated
+
 test.phpspec: ## Run PHPSpec
 	${COMPOSER} phpspec
 

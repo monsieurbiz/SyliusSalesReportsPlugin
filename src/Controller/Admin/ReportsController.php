@@ -106,12 +106,7 @@ final class ReportsController extends AbstractController
 
         // Form is valid, we can generate the report
         try {
-            $totalSalesResult = $this->reportRepository->getSalesForChannelForDates($channel, $fromDate, $toDate);
-            $averageSalesResult = $this->reportRepository->getAverageSalesForChannelForDates($channel, $fromDate, $toDate);
-            $productSalesResult = $this->reportRepository->getProductSalesForChannelForDates($channel, $fromDate, $toDate);
-            $productVariantSalesResult = $this->reportRepository->getProductVariantSalesForChannelForDates($channel, $fromDate, $toDate);
-            $productOptionSalesResult = $this->reportRepository->getProductOptionSalesForChannelForDates($channel, $fromDate, $toDate);
-            $productOptionValueSalesResult = $this->reportRepository->getProductOptionValueSalesForChannelForDates($channel, $fromDate, $toDate);
+            $reports = $this->reportRepository->getReportsForChannelForDates($channel, $fromDate, $toDate);
         } catch (InvalidDateException $e) {
             $form->addError(new FormError($e->getMessage()));
 
@@ -129,12 +124,12 @@ final class ReportsController extends AbstractController
             'from' => $fromDate,
             'to' => $toDate,
             'channel' => $data['channel'],
-            'total_sales_result' => $totalSalesResult,
-            'average_sales_result' => $averageSalesResult,
-            'product_sales_result' => $productSalesResult,
-            'product_variant_sales_result' => $productVariantSalesResult,
-            'product_option_sales_result' => $productOptionSalesResult,
-            'product_option_value_sales_result' => $productOptionValueSalesResult,
+            'total_sales_result' => $reports['total_sales_result'],
+            'average_sales_result' => $reports['average_sales_result'],
+            'product_sales_result' => $reports['product_sales_result'],
+            'product_variant_sales_result' => $reports['product_variant_sales_result'],
+            'product_option_sales_result' => $reports['product_option_sales_result'],
+            'product_option_value_sales_result' => $reports['product_option_value_sales_result'],
             'is_period' => $isPeriod,
             'custom_reports' => $event->getCustomReports(),
         ]);
